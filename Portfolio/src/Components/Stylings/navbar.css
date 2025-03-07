@@ -5,12 +5,17 @@
   --quaternary_color: #EEEEEE;
 } */
 
+.navbar-wrapper {
+  height: 100vh;
+}
 .navbar-container {
   position: absolute;
+  height: max-content;
   width: max-content;
   background-color: black;
   opacity: 0.8;
   padding: 0.3rem 3rem;
+  padding-left: 1rem; 
   border-radius: 99999999999px;
   height: 8vh;
   bottom: -95vh;
@@ -20,8 +25,14 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  transform: translateX(-50%);
+  transform: translateX(-20%);
+  left: 300px;
 }
+
+.navbar-container.left {
+  align-self: flex-start !important;
+}
+
 .navbar-container:has(:hover) {
   transform: translateX(calc(-50% -2vh));
   transition: 0.3s;
@@ -50,11 +61,20 @@
   transform: translate(0, calc(-2.5vh));
 } */
 
-.navbar-item:hover {
+.navbar-item:hover:not(.nohover) {
   background-color: rebeccapurple;
   height: calc(10vh - 0.6rem);
   transform: translateY(-1vh);
-  outline: 0.3rem solid black;
+  outline: 0.4rem solid black;
+  transition: 0.3s;
+  justify-content: space-around;
+}
+
+.navbar-item.proximity {
+  background-color: rebeccapurple;
+  height: calc(9vh - 0.6rem);
+  transform: translateY(-0.5vh);
+  outline: 0.4rem solid black;
   transition: 0.3s;
   justify-content: space-around;
 }
@@ -65,7 +85,8 @@
   aspect-ratio: 1 / 1;
 }
 
-.navbar-item:hover .icon {
+.navbar-item:hover:not(.nohover) .icon,
+.navbar-item.proximity .icon {
   animation: iconAnimation 1s 1 ease-in-out;
   animation-delay: 0.3s;
 }
@@ -77,17 +98,21 @@
   justify-self: center;
   align-self: center;
   opacity: 0;
-  display: none;
+  position: absolute;
 }
 
-.navbar-item:hover span {
-  display: block;
+.navbar-item:hover span,
+.navbar-item.proximity span {
+  position: relative;
   opacity: 1;
   transform: translate(0, -1.5vh);
-  transition: 0.3s;
+  transition: 0.5s;
 }
 
-
+.purple-hover:hover {
+  color: rebeccapurple;
+  transition: 0.5s;
+}
 
 
 
