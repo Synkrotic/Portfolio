@@ -7,6 +7,13 @@ import NavBar from './Components/NavBar.tsx'
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App />
-    <NavBar />
+    <NavBar
+      startPos={
+        0
+        // localStorage.getItem('navbarPositionIndex') !== null
+        // ? parseInt(localStorage.getItem('navbarPositionIndex') as string)
+        // : 4 // Bottom center
+      }
+    />
   </StrictMode>
 )

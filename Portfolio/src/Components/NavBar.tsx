@@ -1,60 +1,154 @@
 import {
   AiOutlineHome, AiFillHome,
-  AiOutlineUser, AiFillUpSquare,
   AiOutlineProduct, AiFillProduct,
   AiOutlineTool, AiTwotoneTool,
   AiFillGithub, AiOutlineGithub,
 } from 'react-icons/ai'
 import { Move } from 'react-feather'
+import { FaUser, FaRegUser } from 'react-icons/fa6'
+
+import navbarSettingsFunction from './ButtonFunctions/navbarSettings'
 
 import './Stylings/navbar.css'
 import NavBarItem from './NavBarItem'
 import React from 'react'
 
-class NavBar extends React.Component {
+interface NavBarProps {
+  startPos: number,
+}
+
+class NavBar extends React.Component<NavBarProps> {
   navItemValues: Array<any>;
   navItems: Array<any>;
-  moveSpeed: number = 0.5;
   moveable: boolean = false;
+  NavElements: Array<HTMLElement>;
+
+  navbar: HTMLElement | null = null;
+  positions: Array<{ x: number, y: number }> = [{ x: 0, y: 0 }];
+  startPos: number;
+  
   constructor(props: any) {
     super(props)
     this.navItemValues = [
-      { onHover: this.setProximity, IconFill: AiFillHome, IconOutline: AiOutlineHome, title: 'Home' },
-      { onHover: this.setProximity, IconFill: AiFillUpSquare, IconOutline: AiOutlineUser, title: 'About Me' },
-      { onHover: this.setProximity, IconFill: AiFillProduct, IconOutline: AiOutlineProduct, title: 'Projects' },
-      { onHover: this.setProximity, IconFill: AiFillGithub, IconOutline: AiOutlineGithub, title: 'Github' },
-      { onHover: this.setProximity, IconFill: AiTwotoneTool, IconOutline: AiOutlineTool, title: 'Settings' },
+      { buttonFunction: () => console.log(), direction: "", IconFill: AiFillHome, IconOutline: AiOutlineHome, title: 'Home' },
+      { buttonFunction: () => console.log(), direction: "smaller", IconFill: FaUser, IconOutline: FaRegUser, title: 'About Me' },
+      { buttonFunction: () => console.log(), direction: "", IconFill: AiFillProduct, IconOutline: AiOutlineProduct, title: 'Projects' },
+      { buttonFunction: () => console.log(), direction: "", IconFill: AiFillGithub, IconOutline: AiOutlineGithub, title: 'Github' },
+      { buttonFunction: navbarSettingsFunction, direction: "", IconFill: AiTwotoneTool, IconOutline: AiOutlineTool, title: 'Settings' },
     ]
     this.navItems = this.navItemValues.map((item, index) => (
       <NavBarItem key={index} {...item} id={index} />
     ))
+    this.NavElements = Array.from(document.getElementsByClassName('navbar-item')) as HTMLElement[];
+    this.startPos = props.startPos;
   }
 
-  setProximity(hoverID: number) {
-    this.navItems.forEach((item: any) => item.setProximity(false));
-    this.navItems[hoverID + 1].setProximity(true);
+  componentDidMount() {
+    this.setPositions();
+    this.setContainerPosition(this.startPos);
   }
 
-  moveNavBar(e: React.MouseEvent) {
+  moveNavBar(endlocation: { x: number, y: number }) {
     if (!this.moveable) return;
-    let mouseCoords = { x: e.clientX, y: e.clientY };
+    
+    if (endlocation.x < 0) endlocation.x = 0;
+    if (endlocation.y < 0) endlocation.y = 0;
+    if (endlocation.x > window.innerWidth) endlocation.x = window.innerWidth;
+    if (endlocation.y > window.innerHeight) endlocation.y = window.innerHeight;
+
+    
     const navbar = document.getElementsByClassName('navbar-container')[0] as HTMLElement;
-    navbar.style.left = `${mouseCoords.x + 1920*(28/1920)}px`;
-    navbar.style.top = `${mouseCoords.y - 1080*(39/1080)}px`;
+    const navbaritems = document.getElementsByClassName('navbar-item') as HTMLCollectionOf<HTMLElement>;
+    const moveButton = document.getElementsByClassName('purple-hover')[0] as HTMLElement;
+    moveButton.classList.add('rebecca'); 
+    
+    const navbarTopPadding = parseFloat(window.getComputedStyle(navbar).paddingTop);
+    const navbarLeftPadding = parseFloat(window.getComputedStyle(navbar).paddingLeft);
+    let navbarX = 0;
+    let navbarY = 0;
+
+    if (navbar.classList.contains('vertical')) {
+      navbarX = endlocation.x - navbar.clientWidth / 2;
+      navbarY = endlocation.y - navbaritems[0].clientHeight / 2 - navbarTopPadding;
+    } else {
+      navbarX = (endlocation.x - navbaritems[0].clientWidth / 2) - navbarLeftPadding;
+      navbarY = endlocation.y - navbar.clientHeight / 2;
+    }
+
+    // Snap to close location
+    // this.positions.map((position, index) => {
+    //   const distance = Math.sqrt(
+    //   Math.pow(position.x - endlocation.x, 2) + Math.pow(position.y - endlocation.y, 2)
+    //   );
+    //   if (distance <= 200) {
+    //     navbar.style.left = `${position.x}px`;
+    //     navbar.style.top = `${position.y}px`;
+    //     return;
+    //   }
+    //   localStorage.setItem('navbarPositionIndex', index.toString());
+    // });
+
+
+    if (navbarX < 0) {
+      navbar.style.left = '0px';
+      return;
+    } if (navbarY < 0) {
+      navbar.style.top = '0px';
+      return;
+    } if (navbarX + navbar.clientWidth > window.innerWidth) {
+      navbar.style.left = `${window.innerWidth - navbar.clientWidth}px`;
+      return;
+    }  if (navbarY + navbar.clientHeight > window.innerHeight) {
+      navbar.style.top = `${window.innerHeight - navbar.clientHeight}px`;
+      return;
+    }
+
+    navbar.style.left = `${navbarX}px`;
+    navbar.style.top = `${navbarY}px`;
+  }
+
+  setPositions() {
+    this.navbar = document.getElementsByClassName('navbar-container')[0] as HTMLElement;
+    this.positions = [
+      {x: window.innerWidth / 2 - this.navbar.clientWidth / 2, y: window.innerHeight / 2 - this.navbar.clientHeight / 2},
+      {x: window.innerWidth * 1/30, y: window.innerHeight * 1/50},
+      {x: window.innerWidth / 2 - this.navbar.clientWidth / 2, y: window.innerHeight * 1/50},
+      {x: window.innerWidth - this.navbar.clientWidth - (window.innerWidth * 1/30), y: window.innerHeight * 1/50},
+
+      {x: window.innerWidth * 1/30, y: window.innerHeight - this.navbar.clientHeight - (window.innerHeight * 1/50)},
+      {x: window.innerWidth / 2 - this.navbar.clientWidth / 2, y: window.innerHeight - this.navbar.clientHeight - (window.innerHeight * 1/50)},
+      {x: window.innerWidth - this.navbar.clientWidth - (window.innerWidth * 1/30), y: window.innerHeight - this.navbar.clientHeight - (window.innerHeight * 1/50)},
+    ];
+  }
+
+  setContainerPosition(positionIndex: number) {
+    if (this.navbar === null) return;
+    this.navbar.style.left = `${this.positions[positionIndex].x}px`;
+    this.navbar.style.top = `${this.positions[positionIndex].y}px`;
+    this.forceUpdate();
   }
 
   render() {
     return (
       <div
         className='navbar-wrapper'
-        onMouseUp={() => this.moveable = false}
-        onMouseMove={(e) => this.moveNavBar(e)}
+        onMouseUp={() => {
+          if (!this.moveable) return;
+          this.moveable = false;
+          const moveButton = document.getElementsByClassName('rebecca')[0] as HTMLElement;
+          moveButton.classList.remove('rebecca');
+        }}
+        onMouseMove={(e) => {
+          let mouse = e as React.MouseEvent;
+          this.moveNavBar({ x: mouse.clientX, y: mouse.clientY });
+        }}
       >
-        <nav className='navbar-container left'
-          >
+        <nav className='navbar-container'>
           <button 
-            className='navbar-item nohover purple-hover' 
-            onMouseDown={() => this.moveable = true}
+            className={`navbar-item nohover purple-hover`}
+            onMouseDown={() => {
+              this.moveable = true;
+            }}
           >
             <Move />
           </button>

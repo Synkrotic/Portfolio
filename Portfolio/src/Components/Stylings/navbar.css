@@ -10,7 +10,6 @@
 }
 .navbar-container {
   position: absolute;
-  height: max-content;
   width: max-content;
   background-color: black;
   opacity: 0.8;
@@ -25,12 +24,15 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  transform: translateX(-20%);
-  left: 300px;
+  box-shadow: 0.75em 0.75em 1.5em rgba(0, 0, 0, 0.5);
+  /* transform: translateX(-20%); */
 }
-
-.navbar-container.left {
-  align-self: flex-start !important;
+.navbar-container.vertical {
+  flex-direction: column;
+  height: max-content;
+  width: 8vh;
+  padding: 3rem 0.3rem;
+  padding-top: 1rem;
 }
 
 .navbar-container:has(:hover) {
@@ -53,18 +55,19 @@
   color: var(--quaternary_color);
 }
 
-/* .navbar-item.focus::before {
-  content: '';
-  height: 1vh;
-  width: calc(13vh - 0.6rem);
-  position: absolute;
-  transform: translate(0, calc(-2.5vh));
-} */
-
-.navbar-item:hover:not(.nohover) {
+.navbar-container:not(.vertical) > .purple-hover:not(.rebecca) ~ .navbar-item:hover:not(.nohover) {
   background-color: rebeccapurple;
   height: calc(10vh - 0.6rem);
   transform: translateY(-1vh);
+  outline: 0.4rem solid black;
+  transition: 0.3s;
+  justify-content: space-around;
+}
+
+.navbar-container.vertical > .purple-hover:not(.rebecca) ~ .navbar-item:hover:not(.nohover) {
+  background-color: rebeccapurple;
+  height: calc(10vh - 0.6rem);
+  transform: translateX(1vh);
   outline: 0.4rem solid black;
   transition: 0.3s;
   justify-content: space-around;
@@ -80,13 +83,17 @@
 }
 
 .navbar-item .icon {
-  height: 4vh !important;
-  width: 4vh !important;
+  height: 4vh;
+  width: 4vh;
   aspect-ratio: 1 / 1;
 }
+.navbar-item.smaller .icon {
+  height: 3.5vh !important;
+  width: 3.5vh !important;
+}
 
-.navbar-item:hover:not(.nohover) .icon,
-.navbar-item.proximity .icon {
+.purple-hover:not(.rebecca) ~ .navbar-item:hover:not(.nohover) .icon,
+.purple-hover:not(.rebecca) ~ .navbar-item.proximity .icon {
   animation: iconAnimation 1s 1 ease-in-out;
   animation-delay: 0.3s;
 }
@@ -101,8 +108,8 @@
   position: absolute;
 }
 
-.navbar-item:hover span,
-.navbar-item.proximity span {
+.purple-hover:not(.rebecca) ~ .navbar-item:hover span,
+.purple-hover:not(.rebecca) ~ .navbar-item.proximity span {
   position: relative;
   opacity: 1;
   transform: translate(0, -1.5vh);
@@ -112,6 +119,10 @@
 .purple-hover:hover {
   color: rebeccapurple;
   transition: 0.5s;
+}
+
+.rebecca {
+  color: rebeccapurple;
 }
 
 
