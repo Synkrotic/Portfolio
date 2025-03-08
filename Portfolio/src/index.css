@@ -15,5 +15,8 @@ body {
   padding: 0;
   font-family: 'Diodrum', 'Roboto', sans-serif;
   background-color: var(--primary_color);
+  background-image: url(assets/Images/e1e907c4-aef4-4bba-a796-e2feff90a1b0.webp);
+  background-size: cover;
+  background-repeat: no-repeat;
   color: var(--quaternary_color);
 }

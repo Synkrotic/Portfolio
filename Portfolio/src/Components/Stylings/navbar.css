@@ -8,11 +8,22 @@
 .navbar-wrapper {
   height: 100vh;
 }
+
+.navbar-snappoint {
+  position: absolute;
+  border-radius: 99999999999px;
+  height: 8vh;
+  width: 200px;
+  outline: 3px solid snow;
+  opacity: 0.5;
+  top: 0px;
+  left: 0px;
+}
+
 .navbar-container {
   position: absolute;
   width: max-content;
-  background-color: black;
-  opacity: 0.8;
+  background-color: rgba(0, 0, 0, 0.7);
   padding: 0.3rem 3rem;
   padding-left: 1rem; 
   border-radius: 99999999999px;
@@ -25,7 +36,6 @@
   justify-content: center;
   align-items: center;
   box-shadow: 0.75em 0.75em 1.5em rgba(0, 0, 0, 0.5);
-  /* transform: translateX(-20%); */
 }
 .navbar-container.vertical {
   flex-direction: column;
@@ -56,28 +66,28 @@
 }
 
 .navbar-container:not(.vertical) > .purple-hover:not(.rebecca) ~ .navbar-item:hover:not(.nohover) {
-  background-color: rebeccapurple;
+  background-color: rgba(102, 51, 153, 0.7);
   height: calc(10vh - 0.6rem);
   transform: translateY(-1vh);
-  outline: 0.4rem solid black;
+  outline: 0.4rem solid rgba(0, 0, 0, 0.7);
   transition: 0.3s;
   justify-content: space-around;
 }
 
 .navbar-container.vertical > .purple-hover:not(.rebecca) ~ .navbar-item:hover:not(.nohover) {
-  background-color: rebeccapurple;
+  background-color: rgba(102, 51, 153, 0.7);
   height: calc(10vh - 0.6rem);
   transform: translateX(1vh);
-  outline: 0.4rem solid black;
+  outline: 0.4rem solid rgba(0, 0, 0, 0.7);
   transition: 0.3s;
   justify-content: space-around;
 }
 
 .navbar-item.proximity {
-  background-color: rebeccapurple;
+  background-color: rgba(102, 51, 153, 0.7);
   height: calc(9vh - 0.6rem);
   transform: translateY(-0.5vh);
-  outline: 0.4rem solid black;
+  outline: 0.4rem solid rgba(0, 0, 0, 0.7);
   transition: 0.3s;
   justify-content: space-around;
 }
@@ -117,12 +127,12 @@
 }
 
 .purple-hover:hover {
-  color: rebeccapurple;
+  color: rgba(102, 51, 153, 0.7);
   transition: 0.5s;
 }
 
 .rebecca {
-  color: rebeccapurple;
+  color: rgba(102, 51, 153, 0.7);
 }
 
 

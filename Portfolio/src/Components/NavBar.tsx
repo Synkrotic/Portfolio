@@ -48,6 +48,16 @@ class NavBar extends React.Component<NavBarProps> {
     this.setContainerPosition(this.startPos);
   }
 
+  setSnapPointSize() {
+    const navbar = document.getElementsByClassName('navbar-container')[0] as HTMLElement;
+    const snapPoints = document.getElementsByClassName('navbar-snappoint') as HTMLCollectionOf<HTMLElement>;
+    for (let snapPoint of snapPoints) {
+      snapPoint.style.width = `${navbar.clientWidth}px`;
+      snapPoint.style.height = `${navbar.clientHeight}px`;
+      snapPoint.style.display = 'block';
+    }
+  }
+
   moveNavBar(endlocation: { x: number, y: number }) {
     if (!this.moveable) return;
     
@@ -55,7 +65,8 @@ class NavBar extends React.Component<NavBarProps> {
     if (endlocation.y < 0) endlocation.y = 0;
     if (endlocation.x > window.innerWidth) endlocation.x = window.innerWidth;
     if (endlocation.y > window.innerHeight) endlocation.y = window.innerHeight;
-
+    this.setPositions();
+    this.setSnapPointSize();
     
     const navbar = document.getElementsByClassName('navbar-container')[0] as HTMLElement;
     const navbaritems = document.getElementsByClassName('navbar-item') as HTMLCollectionOf<HTMLElement>;
@@ -75,18 +86,14 @@ class NavBar extends React.Component<NavBarProps> {
       navbarY = endlocation.y - navbar.clientHeight / 2;
     }
 
-    // Snap to close location
-    // this.positions.map((position, index) => {
-    //   const distance = Math.sqrt(
-    //   Math.pow(position.x - endlocation.x, 2) + Math.pow(position.y - endlocation.y, 2)
-    //   );
-    //   if (distance <= 200) {
-    //     navbar.style.left = `${position.x}px`;
-    //     navbar.style.top = `${position.y}px`;
-    //     return;
-    //   }
-    //   localStorage.setItem('navbarPositionIndex', index.toString());
-    // });
+    const snapDistance = 100;
+    for (let position of this.positions) {
+      if (Math.abs(navbarX - position.x) < snapDistance && Math.abs(navbarY - position.y) < snapDistance) {
+        navbarX = position.x;
+        navbarY = position.y;
+        break;
+      }
+    }
 
 
     if (navbarX < 0) {
@@ -109,11 +116,20 @@ class NavBar extends React.Component<NavBarProps> {
 
   setPositions() {
     this.navbar = document.getElementsByClassName('navbar-container')[0] as HTMLElement;
-    this.positions = [
-      {x: window.innerWidth / 2 - this.navbar.clientWidth / 2, y: window.innerHeight / 2 - this.navbar.clientHeight / 2},
+    if (window.innerWidth <= 768) {
+      this.positions = [
+        {x: 0, y: 0},
+        {x: 0, y: window.innerHeight - this.navbar.clientHeight},
+      ]
+      return
+    }
+    this.positions = [      
       {x: window.innerWidth * 1/30, y: window.innerHeight * 1/50},
       {x: window.innerWidth / 2 - this.navbar.clientWidth / 2, y: window.innerHeight * 1/50},
       {x: window.innerWidth - this.navbar.clientWidth - (window.innerWidth * 1/30), y: window.innerHeight * 1/50},
+      
+      {x: window.innerWidth * 1/30, y: window.innerHeight / 2 - this.navbar.clientHeight / 2},
+      {x: window.innerWidth - this.navbar.clientWidth - (window.innerWidth * 1/30), y: window.innerHeight / 2 - this.navbar.clientHeight / 2},
 
       {x: window.innerWidth * 1/30, y: window.innerHeight - this.navbar.clientHeight - (window.innerHeight * 1/50)},
       {x: window.innerWidth / 2 - this.navbar.clientWidth / 2, y: window.innerHeight - this.navbar.clientHeight - (window.innerHeight * 1/50)},
@@ -137,12 +153,26 @@ class NavBar extends React.Component<NavBarProps> {
           this.moveable = false;
           const moveButton = document.getElementsByClassName('rebecca')[0] as HTMLElement;
           moveButton.classList.remove('rebecca');
+
+          const snapPoints = document.getElementsByClassName('navbar-snappoint') as HTMLCollectionOf<HTMLElement>;
+          for (let snapPoint of snapPoints) { snapPoint.style.display = 'none'; }
         }}
         onMouseMove={(e) => {
           let mouse = e as React.MouseEvent;
           this.moveNavBar({ x: mouse.clientX, y: mouse.clientY });
         }}
       >
+        {this.positions.map((position, i) => (
+          <div
+            key={i}
+            className='navbar-snappoint'
+            style={{
+              left: `${position.x}px`,
+              top: `${position.y}px`,
+              display: 'none',
+            }}
+          />
+        ))}
         <nav className='navbar-container'>
           <button 
             className={`navbar-item nohover purple-hover`}
