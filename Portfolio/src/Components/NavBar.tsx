@@ -105,19 +105,17 @@ class NavBar extends React.Component<NavBarProps> {
     }
 
 
-    if (navbarX < 0) {
-      navbar.style.left = '0px';
-      return;
-    } if (navbarY < 0) {
-      navbar.style.top = '0px';
-      return;
-    } if (navbarX + navbar.clientWidth > window.innerWidth) {
-      navbar.style.left = `${window.innerWidth - navbar.clientWidth}px`;
-      return;
-    }  if (navbarY + navbar.clientHeight > window.innerHeight) {
-      navbar.style.top = `${window.innerHeight - navbar.clientHeight}px`;
-      return;
-    }
+    if (navbarX < 0)
+      navbarX = 0;
+    if (navbarY < 0)
+      navbarY = 0;
+    if (navbarX + navbar.clientWidth > window.innerWidth)
+      navbarX = window.innerWidth - navbar.clientWidth;
+    if (navbarY + navbar.clientHeight > window.innerHeight)
+      navbarY = window.innerHeight - navbar.clientHeight;
+
+    if (navbarX > (window.innerWidth / 2) - (navbar.clientWidth / 2) && navbar.classList.contains('vertical')) navbar.classList.add('left')
+    else navbar.classList.remove('left');
 
     navbar.style.left = `${navbarX}px`;
     navbar.style.top = `${navbarY}px`;

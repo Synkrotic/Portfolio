@@ -8,7 +8,6 @@ import { Analytics } from "@vercel/analytics/react"
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Analytics />
-    <App />
     <NavBar
       startPos={
         4
@@ -17,5 +16,6 @@ createRoot(document.getElementById('root')!).render(
         // : 4 // Bottom center
       }
     />
+    <App />
   </StrictMode>
 )
