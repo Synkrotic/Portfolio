@@ -58,6 +58,14 @@ class NavBar extends React.Component<NavBarProps> {
     }
   }
 
+  setSnapLocation() {
+    const snapPoints = document.getElementsByClassName('navbar-snappoint') as HTMLCollectionOf<HTMLElement>;
+    this.positions.map((position, index) => {
+      snapPoints[index].style.left = `${position.x}px`;
+      snapPoints[index].style.top = `${position.y}px`;
+    });
+  }
+
   moveNavBar(endlocation: { x: number, y: number }) {
     if (!this.moveable) return;
     
@@ -67,6 +75,7 @@ class NavBar extends React.Component<NavBarProps> {
     if (endlocation.y > window.innerHeight) endlocation.y = window.innerHeight;
     this.setPositions();
     this.setSnapPointSize();
+    this.setSnapLocation();
     
     const navbar = document.getElementsByClassName('navbar-container')[0] as HTMLElement;
     const navbaritems = document.getElementsByClassName('navbar-item') as HTMLCollectionOf<HTMLElement>;
@@ -116,6 +125,7 @@ class NavBar extends React.Component<NavBarProps> {
 
   setPositions() {
     this.navbar = document.getElementsByClassName('navbar-container')[0] as HTMLElement;
+    const isVertical = this.navbar.classList.contains('vertical');
     if (window.innerWidth <= 768) {
       this.positions = [
         {x: 0, y: 0},
@@ -123,18 +133,22 @@ class NavBar extends React.Component<NavBarProps> {
       ]
       return
     }
-    this.positions = [      
-      {x: window.innerWidth * 1/30, y: window.innerHeight * 1/50},
-      {x: window.innerWidth / 2 - this.navbar.clientWidth / 2, y: window.innerHeight * 1/50},
-      {x: window.innerWidth - this.navbar.clientWidth - (window.innerWidth * 1/30), y: window.innerHeight * 1/50},
-      
-      {x: window.innerWidth * 1/30, y: window.innerHeight / 2 - this.navbar.clientHeight / 2},
-      {x: window.innerWidth - this.navbar.clientWidth - (window.innerWidth * 1/30), y: window.innerHeight / 2 - this.navbar.clientHeight / 2},
 
-      {x: window.innerWidth * 1/30, y: window.innerHeight - this.navbar.clientHeight - (window.innerHeight * 1/50)},
-      {x: window.innerWidth / 2 - this.navbar.clientWidth / 2, y: window.innerHeight - this.navbar.clientHeight - (window.innerHeight * 1/50)},
-      {x: window.innerWidth - this.navbar.clientWidth - (window.innerWidth * 1/30), y: window.innerHeight - this.navbar.clientHeight - (window.innerHeight * 1/50)},
-    ];
+    this.positions = [];
+    this.positions.push({x: window.innerWidth * 1/30, y: window.innerHeight * 1/50});
+    if (!isVertical) this.positions.push({x: window.innerWidth / 2 - this.navbar.clientWidth / 2, y: window.innerHeight * 1/50});
+    this.positions.push({x: window.innerWidth - this.navbar.clientWidth - (window.innerWidth * 1/30), y: window.innerHeight * 1/50});
+
+
+    if (isVertical) {
+      this.positions.push({x: window.innerWidth * 1/30, y: window.innerHeight / 2 - this.navbar.clientHeight / 2});
+      this.positions.push({x: window.innerWidth - this.navbar.clientWidth - (window.innerWidth * 1/30), y: window.innerHeight / 2 - this.navbar.clientHeight / 2});
+    }
+
+    this.positions.push({x: window.innerWidth * 1/30, y: window.innerHeight - this.navbar.clientHeight - (window.innerHeight * 1/50)});
+    if (!isVertical) this.positions.push({x: window.innerWidth / 2 - this.navbar.clientWidth / 2, y: window.innerHeight - this.navbar.clientHeight - (window.innerHeight * 1/50)});
+    this.positions.push({x: window.innerWidth - this.navbar.clientWidth - (window.innerWidth * 1/30), y: window.innerHeight - this.navbar.clientHeight - (window.innerHeight
+      * 1/50)});
   }
 
   setContainerPosition(positionIndex: number) {
@@ -151,8 +165,8 @@ class NavBar extends React.Component<NavBarProps> {
         onMouseUp={() => {
           if (!this.moveable) return;
           this.moveable = false;
-          const moveButton = document.getElementsByClassName('rebecca')[0] as HTMLElement;
-          moveButton.classList.remove('rebecca');
+          const moveButton = document.getElementsByClassName('movebutton')[0] as HTMLElement;
+          if (moveButton.classList.contains('rebecca')) moveButton.classList.remove('rebecca');
 
           const snapPoints = document.getElementsByClassName('navbar-snappoint') as HTMLCollectionOf<HTMLElement>;
           for (let snapPoint of snapPoints) { snapPoint.style.display = 'none'; }
@@ -175,7 +189,7 @@ class NavBar extends React.Component<NavBarProps> {
         ))}
         <nav className='navbar-container'>
           <button 
-            className={`navbar-item nohover purple-hover`}
+            className={`navbar-item nohover purple-hover movebutton`}
             onMouseDown={() => {
               this.moveable = true;
             }}
