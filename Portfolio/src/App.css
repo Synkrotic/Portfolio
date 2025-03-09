@@ -53,11 +53,13 @@
 
 @media screen and (max-width: 768px) {
   #header-name {
-    font-size: 3.5rem;
+    font-size: 12vw;
+    max-width: 80vw;
   }
 
   #header-profession {
-    font-size: 1.7rem;
+    font-size: 6vw;
+    max-width: 70vw;
   }
 }
 

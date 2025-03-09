@@ -215,6 +215,7 @@ class NavBar extends React.Component<NavBarProps> {
 
         onMouseUp={() => { this.stopMove(); }}
         onTouchEnd={() => { this.stopMove(); }}
+        onTouchCancel={() => { this.stopMove(); }}
 
         onMouseMove={(e) => {
           let mouse = e as React.MouseEvent;
