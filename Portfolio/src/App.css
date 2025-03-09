@@ -13,7 +13,7 @@
   flex-wrap: nowrap;
   flex-direction: column;
   justify-content: flex-start;
-  overflow-y: scroll !important;
+  overflow-y: scroll;
 }
 
 .app-header {
@@ -49,6 +49,16 @@
   font-size: 5rem;
   width: max-content;
   min-height: 7rem;
+}
+
+@media screen and (max-width: 768px) {
+  #header-name {
+    font-size: 3.5rem;
+  }
+
+  #header-profession {
+    font-size: 1.7rem;
+  }
 }
 
 .App main {

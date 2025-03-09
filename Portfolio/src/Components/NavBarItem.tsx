@@ -34,21 +34,25 @@ class NavBarItem extends React.Component<NavBarItemProps> {
 
   componentDidMount() {
     window.addEventListener('scroll', () => {
-      if (this.deactivateRange) {
-        if (window.scrollY >= this.deactivateRange.top && window.scrollY < this.deactivateRange.bottom) {
-          this.Icon = this.IconFill;
-          this.forceUpdate();
-        } else {
-          this.Icon = this.IconOutline;
-          this.forceUpdate();
-        }
-      }
+      this.checkActive();
     });
+  }
+
+  checkActive() {
+    if (this.deactivateRange) {
+      if (window.scrollY >= this.deactivateRange.top && window.scrollY < this.deactivateRange.bottom) {
+        this.Icon = this.IconFill;
+      } else {
+        this.Icon = this.IconOutline;
+      }
+      this.forceUpdate();
+    }
   }
 
   handleClick() {
     this.buttonFunction();
     this.Icon = this.IconFill;
+    this.checkActive();
     this.forceUpdate();
   }
 

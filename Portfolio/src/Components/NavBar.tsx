@@ -103,6 +103,11 @@ class NavBar extends React.Component<NavBarProps> {
     if (endlocation.y < 0) endlocation.y = 0;
     if (endlocation.x > window.innerWidth) endlocation.x = window.innerWidth;
     if (endlocation.y > window.innerHeight) endlocation.y = window.innerHeight;
+
+    // Disable scrolling
+    const body = document.getElementsByTagName('body')[0] as HTMLElement;
+    body.style.overflowY = 'hidden';
+
     this.setPositions();
     this.setSnapPointSize();
     this.setSnapLocation();
@@ -189,23 +194,37 @@ class NavBar extends React.Component<NavBarProps> {
     this.forceUpdate();
   }
 
+  stopMove() {
+    if (!this.moveable) return;
+    this.moveable = false;
+    const moveButton = document.getElementsByClassName('movebutton')[0] as HTMLElement;
+    if (moveButton.classList.contains('rebecca')) moveButton.classList.remove('rebecca');
+
+    const snapPoints = document.getElementsByClassName('navbar-snappoint') as HTMLCollectionOf<HTMLElement>;
+    for (let snapPoint of snapPoints) { snapPoint.style.display = 'none'; }
+
+    // Enable Scrolling
+    const body = document.getElementsByTagName('body')[0] as HTMLElement;
+    body.style.overflowY = 'scroll';
+  }
+
   render() {
     return (
       <div
         className='navbar-wrapper'
-        onMouseUp={() => {
-          if (!this.moveable) return;
-          this.moveable = false;
-          const moveButton = document.getElementsByClassName('movebutton')[0] as HTMLElement;
-          if (moveButton.classList.contains('rebecca')) moveButton.classList.remove('rebecca');
 
-          const snapPoints = document.getElementsByClassName('navbar-snappoint') as HTMLCollectionOf<HTMLElement>;
-          for (let snapPoint of snapPoints) { snapPoint.style.display = 'none'; }
-        }}
+        onMouseUp={() => { this.stopMove(); }}
+        onTouchEnd={() => { this.stopMove(); }}
+
         onMouseMove={(e) => {
           let mouse = e as React.MouseEvent;
           this.moveNavBar({ x: mouse.clientX, y: mouse.clientY });
         }}
+        onTouchMove={(e) => {
+          let touch = e.touches[0];
+          this.moveNavBar({ x: touch.clientX, y: touch.clientY });
+        }}
+
       >
         {this.positions.map((position, i) => (
           <div
@@ -221,9 +240,9 @@ class NavBar extends React.Component<NavBarProps> {
         <nav className='navbar-container'>
           <button 
             className={`navbar-item nohover purple-hover movebutton`}
-            onMouseDown={() => {
-              this.moveable = true;
-            }}
+            
+            onMouseDown={() => { this.moveable = true; }}
+            onTouchStart={() => { this.moveable = true; }}
           >
             <Move />
           </button>

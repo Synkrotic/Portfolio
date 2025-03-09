@@ -54,6 +54,13 @@
   box-shadow: 0.75em 0.75em 1.5em rgba(0, 0, 0, 0.5);
   mix-blend-mode: multiply;
 }
+
+@media screen and (max-width: 768px) {
+  .navbar-container {
+    width: 100vw;
+  }
+}
+
 .navbar-container.vertical {
   flex-direction: column;
   height: max-content;
