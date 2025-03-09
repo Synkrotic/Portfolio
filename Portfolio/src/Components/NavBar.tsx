@@ -143,39 +143,41 @@ class NavBar extends React.Component<NavBarProps> {
     }
 
 
-    if (!this.isPhone) {
-      if (navbarX < 0)
-        navbarX = 0;
-      if (navbarX + navbar.clientWidth > window.innerWidth)
-        navbarX = window.innerWidth - navbar.clientWidth;
-    }
+    if (navbarX < 0)
+      navbarX = 0;
+    if (navbarX + navbar.clientWidth > window.innerWidth)
+      navbarX = window.innerWidth - navbar.clientWidth;
     
     if (navbarY < 0)
       navbarY = 0;
     if (navbarY + navbar.clientHeight > window.innerHeight)
       navbarY = window.innerHeight - navbar.clientHeight;
 
-    if (!this.isPhone) {
-      if (navbarX > (window.innerWidth / 2) - (navbar.clientWidth / 2) && navbar.classList.contains('vertical')) navbar.classList.add('left')
-      else navbar.classList.remove('left');
-    }
+    if (navbarX > (window.innerWidth / 2) - (navbar.clientWidth / 2) && navbar.classList.contains('vertical')) navbar.classList.add('left')
+    else navbar.classList.remove('left');
 
     if (navbarY < (window.innerHeight / 2) - (navbar.clientHeight / 2) && !navbar.classList.contains('vertical')) navbar.classList.add('bottom')
     else navbar.classList.remove('bottom');
 
-    if (!this.isPhone)
-      navbar.style.left = `${navbarX}px`;
+    navbar.style.left = `${navbarX}px`;
     navbar.style.top = `${navbarY}px`;
   }
 
   setPositions() {
     this.navbar = document.getElementsByClassName('navbar-container')[0] as HTMLElement;
     const isVertical = this.navbar.classList.contains('vertical');
-    if (window.innerWidth <= 768) {
+    if (this.isPhone) {
       this.positions = [
         {x: 0, y: 0},
         {x: 0, y: window.innerHeight - this.navbar.clientHeight},
       ]
+      if (isVertical) {
+        this.positions.push({x: 0, y: window.innerHeight / 2 - this.navbar.clientHeight / 2});
+
+        this.positions.push({x: window.innerWidth - this.navbar.clientWidth, y: 0});
+        this.positions.push({x: window.innerWidth - this.navbar.clientWidth, y: window.innerHeight / 2 - this.navbar.clientHeight / 2});
+        this.positions.push({x: window.innerWidth - this.navbar.clientWidth, y: window.innerHeight - this.navbar.clientHeight / 2});
+      }
       return
     }
 
