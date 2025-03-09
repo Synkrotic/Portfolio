@@ -248,17 +248,19 @@ class NavBar extends React.Component<NavBarProps> {
         }}
 
       >
-        {this.positions.map((position, i) => (
-          <div
-            key={i}
-            className='navbar-snappoint'
-            style={{
-              left: `${position.x}px`,
-              top: `${position.y}px`,
-              display: 'none',
-            }}
-          />
-          ))}
+        {
+          this.positions.map((position, i) => (
+            <div
+              key={i}
+              className='navbar-snappoint'
+              style={{
+                left: `${position.x}px`,
+                top: `${position.y}px`,
+                display: 'none',
+              }}
+            />
+          ))
+        } 
         <nav className='navbar-container'>
           <button 
             className={`navbar-item nohover purple-hover movebutton`}

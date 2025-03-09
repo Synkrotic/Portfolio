@@ -19,7 +19,7 @@
 .app-header {
   aspect-ratio: 7 / 6;
   width: 100vw;
-  background-image: url(assets/Images/HeaderBackground.webp);
+  background-image: url(assets/Images/bg.webp);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;

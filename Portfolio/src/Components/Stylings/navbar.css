@@ -55,12 +55,6 @@
   mix-blend-mode: multiply;
 }
 
-@media screen and (max-width: 768px) {
-  .navbar-container {
-    width: 100vw;
-  }
-}
-
 .navbar-container.vertical {
   flex-direction: column;
   height: max-content;
@@ -163,7 +157,11 @@
   color: rgba(102, 51, 153, 0.7);
 }
 
-
+@media screen and (max-width: 768px) {
+  .navbar-container {
+    width: 100vw;
+  }
+}
 
 
 @keyframes iconAnimation {
