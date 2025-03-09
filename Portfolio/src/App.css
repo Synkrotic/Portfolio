@@ -5,7 +5,7 @@
   position: relative;
 }
 
-.App {
+.app {
   height: 200vh;
   width: 100vw;
   position: absolute;
@@ -14,16 +14,15 @@
   flex-direction: column;
   justify-content: flex-start;
   overflow-y: scroll !important;
-  user-select: none;
-  z-index: 1;
 }
 
-.App-header {
+.app-header {
   aspect-ratio: 7 / 6;
   width: 100vw;
   background-image: url(assets/Images/HeaderBackground.webp);
   background-size: cover;
   background-repeat: no-repeat;
+  background-position: center;
   display: flex;
   flex-wrap: nowrap;
   flex-direction: column;
@@ -42,12 +41,14 @@
   align-items: center;
 }
 
-h1 {
+#header-name {
   font-size: 10rem;
 }
 
-h2 {
+#header-profession {
   font-size: 5rem;
+  width: max-content;
+  min-height: 7rem;
 }
 
 .App main {

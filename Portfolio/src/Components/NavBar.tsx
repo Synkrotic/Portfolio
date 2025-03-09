@@ -8,6 +8,8 @@ import { Move } from 'react-feather'
 import { FaUser, FaRegUser } from 'react-icons/fa6'
 
 import navbarSettingsFunction from './ButtonFunctions/navbarSettings'
+import scrollHome from './ButtonFunctions/scrollHome'
+import scrollAbout from './ButtonFunctions/scrollAbout'
 
 import './Stylings/navbar.css'
 import NavBarItem from './NavBarItem'
@@ -30,14 +32,37 @@ class NavBar extends React.Component<NavBarProps> {
   constructor(props: any) {
     super(props)
     this.navItemValues = [
-      { buttonFunction: () => console.log(), direction: "", IconFill: AiFillHome, IconOutline: AiOutlineHome, title: 'Home' },
-      { buttonFunction: () => console.log(), direction: "smaller", IconFill: FaUser, IconOutline: FaRegUser, title: 'About Me' },
-      { buttonFunction: () => console.log(), direction: "", IconFill: AiFillProduct, IconOutline: AiOutlineProduct, title: 'Projects' },
-      { buttonFunction: () => console.log(), direction: "", IconFill: AiFillGithub, IconOutline: AiOutlineGithub, title: 'Github' },
-      { buttonFunction: navbarSettingsFunction, direction: "", IconFill: AiTwotoneTool, IconOutline: AiOutlineTool, title: 'Settings' },
+      {
+        buttonFunction: scrollHome,
+        deactivateRange: { top: 0, bottom: window.innerHeight},
+        IconFill: AiFillHome,
+        IconOutline: AiOutlineHome,
+        title: 'Home'
+      }, { 
+        buttonFunction: scrollAbout,
+        deactivateRange: { top: window.innerHeight, bottom: window.innerHeight * 2 },
+        extraClass: "smaller",
+        IconFill: FaUser,
+        IconOutline: FaRegUser,
+        title: 'About Me'
+      }, { 
+        IconFill: AiFillProduct,
+        IconOutline: AiOutlineProduct,
+        title: 'Projects'
+      }, {
+        buttonFunction: () => window.open('https://www.github.com/Synkrotic'),
+        IconFill: AiFillGithub,
+        IconOutline: AiOutlineGithub,
+        title: 'Github'
+      }, {
+        buttonFunction: navbarSettingsFunction,
+        IconFill: AiTwotoneTool,
+        IconOutline: AiOutlineTool,
+        title: 'Settings'
+      },
     ]
     this.navItems = this.navItemValues.map((item, index) => (
-      <NavBarItem key={index} {...item} id={index} />
+      React.createElement(NavBarItem, { ...item, id: index, key: index })
     ))
     this.NavElements = Array.from(document.getElementsByClassName('navbar-item')) as HTMLElement[];
     this.startPos = props.startPos;
@@ -46,6 +71,11 @@ class NavBar extends React.Component<NavBarProps> {
   componentDidMount() {
     this.setPositions();
     this.setContainerPosition(this.startPos);
+
+    window.addEventListener('resize', () => {
+      this.setPositions();
+      this.setContainerPosition(this.startPos);
+    });
   }
 
   setSnapPointSize() {
@@ -117,6 +147,9 @@ class NavBar extends React.Component<NavBarProps> {
     if (navbarX > (window.innerWidth / 2) - (navbar.clientWidth / 2) && navbar.classList.contains('vertical')) navbar.classList.add('left')
     else navbar.classList.remove('left');
 
+    if (navbarY < (window.innerHeight / 2) - (navbar.clientHeight / 2) && !navbar.classList.contains('vertical')) navbar.classList.add('bottom')
+    else navbar.classList.remove('bottom');
+
     navbar.style.left = `${navbarX}px`;
     navbar.style.top = `${navbarY}px`;
   }
@@ -184,7 +217,7 @@ class NavBar extends React.Component<NavBarProps> {
               display: 'none',
             }}
           />
-        ))}
+          ))}
         <nav className='navbar-container'>
           <button 
             className={`navbar-item nohover purple-hover movebutton`}
@@ -194,7 +227,7 @@ class NavBar extends React.Component<NavBarProps> {
           >
             <Move />
           </button>
-          {this.navItems}
+            {this.navItems}
         </nav>
       </div>
     )

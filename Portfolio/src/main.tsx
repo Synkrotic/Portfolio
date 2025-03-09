@@ -8,14 +8,14 @@ import { Analytics } from "@vercel/analytics/react"
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Analytics />
+    <App />
     <NavBar
       startPos={
-        4
+        1
         // localStorage.getItem('navbarPositionIndex') !== null
         // ? parseInt(localStorage.getItem('navbarPositionIndex') as string)
         // : 4 // Bottom center
       }
     />
-    <App />
   </StrictMode>
 )

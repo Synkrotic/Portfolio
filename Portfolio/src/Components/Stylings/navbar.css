@@ -10,29 +10,41 @@
   width: 100vw;
   position: fixed;
   overflow: hidden;
-  z-index: 2;
 }
 
 .navbar-snappoint {
   position: absolute;
   border-radius: 99999999999px;
-  height: 8vh;
-  width: 200px;
-  outline: 3px solid snow;
-  opacity: 0.5;
+  outline: 3px solid rgba(255, 250, 250, 0.5);
+  background-color: rgba(255, 250, 250, 0.1);
   top: 0px;
   left: 0px;
+
+  color: snow;
+  padding: auto;
+}
+
+.navbar-snappoint > p {
+  font-size: 1.5rem;
+  height: max-content;
+  width: max-content;
+  margin: auto;
+  vertical-align: middle;
+  top: calc(50% - 0.75rem);
 }
 
 .navbar-container {
   position: relative;
   width: max-content;
   background-color: rgba(0, 0, 0, 0.7);
-  padding: 0.3rem 3rem;
-  padding-left: 1rem; 
+
+  padding-top: 0.3rem;
+  padding-bottom: 0.3rem;
+  padding-left: 1rem;
+  padding-right: 3rem;
+
   border-radius: 99999999999px;
   height: 8vh;
-  bottom: -95vh;
   transition: 0.3s;
   display: flex;
   flex-wrap: nowrap;
@@ -40,6 +52,7 @@
   justify-content: center;
   align-items: center;
   box-shadow: 0.75em 0.75em 1.5em rgba(0, 0, 0, 0.5);
+  mix-blend-mode: multiply;
 }
 .navbar-container.vertical {
   flex-direction: column;
@@ -69,7 +82,7 @@
   color: var(--quaternary_color);
 }
 
-.navbar-container:not(.vertical) > .purple-hover:not(.rebecca) ~ .navbar-item:hover:not(.nohover) {
+.purple-hover:not(.rebecca) ~ .navbar-item:hover:not(.nohover) {
   background-color: rgba(102, 51, 153, 0.7);
   height: calc(10vh - 0.6rem);
   transform: translateY(-1vh);
@@ -78,24 +91,18 @@
   justify-content: space-around;
 }
 
+.navbar-container:not(.vertical) > .purple-hover:not(.rebecca) ~ .navbar-item:hover:not(.nohover) {
+  transform: translateY(-1vh);
+}
+.navbar-container.bottom > .purple-hover:not(.rebecca) ~ .navbar-item:hover:not(.nohover) {
+  transform: translateY(1vh);
+}
 .navbar-container.vertical > .purple-hover:not(.rebecca) ~ .navbar-item:hover:not(.nohover) {
-  background-color: rgba(102, 51, 153, 0.7);
-  height: calc(10vh - 0.6rem);
   transform: translateX(1vh);
-  outline: 0.4rem solid rgba(0, 0, 0, 0.7);
-  transition: 0.3s;
-  justify-content: space-around;
 }
-
 .navbar-container.vertical.left > .purple-hover:not(.rebecca) ~ .navbar-item:hover:not(.nohover) {
-  background-color: rgba(102, 51, 153, 0.7);
-  height: calc(10vh - 0.6rem);
   transform: translateX(-1vh);
-  outline: 0.4rem solid rgba(0, 0, 0, 0.7);
-  transition: 0.3s;
-  justify-content: space-around;
 }
-
 
 .navbar-item.proximity {
   background-color: rgba(102, 51, 153, 0.7);
