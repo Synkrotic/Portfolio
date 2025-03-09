@@ -28,34 +28,37 @@ class NavBar extends React.Component<NavBarProps> {
   navbar: HTMLElement | null = null;
   positions: Array<{ x: number, y: number }> = [{ x: 0, y: 0 }];
   startPos: number;
+
+  isPhone: boolean = window.innerWidth <= 768;
   
   constructor(props: any) {
     super(props)
     this.navItemValues = [
       {
-        buttonFunction: scrollHome,
+        buttonFunction: () => { scrollHome(); this.stopMobileButtonHover(); },
         deactivateRange: { top: 0, bottom: window.innerHeight},
         IconFill: AiFillHome,
         IconOutline: AiOutlineHome,
         title: 'Home'
       }, { 
-        buttonFunction: scrollAbout,
+        buttonFunction: () => { scrollAbout(); this.stopMobileButtonHover(); },
         deactivateRange: { top: window.innerHeight, bottom: window.innerHeight * 2 },
         extraClass: "smaller",
         IconFill: FaUser,
         IconOutline: FaRegUser,
         title: 'About Me'
       }, { 
+        buttonFunction: () => { this.stopMobileButtonHover(); },
         IconFill: AiFillProduct,
         IconOutline: AiOutlineProduct,
         title: 'Projects'
       }, {
-        buttonFunction: () => window.open('https://www.github.com/Synkrotic'),
+        buttonFunction: () => { window.open('https://www.github.com/Synkrotic'); this.stopMobileButtonHover(); },
         IconFill: AiFillGithub,
         IconOutline: AiOutlineGithub,
         title: 'Github'
       }, {
-        buttonFunction: navbarSettingsFunction,
+        buttonFunction: () => { navbarSettingsFunction(); this.stopMobileButtonHover(); },
         IconFill: AiTwotoneTool,
         IconOutline: AiOutlineTool,
         title: 'Settings'
@@ -142,21 +145,28 @@ class NavBar extends React.Component<NavBarProps> {
 
     if (navbarX < 0)
       navbarX = 0;
-    if (navbarY < 0)
-      navbarY = 0;
     if (navbarX + navbar.clientWidth > window.innerWidth)
       navbarX = window.innerWidth - navbar.clientWidth;
-    if (navbarY + navbar.clientHeight > window.innerHeight)
-      navbarY = window.innerHeight - navbar.clientHeight;
+    
+    if (!this.isPhone) {
+      if (navbarY < 0)
+        navbarY = 0;
+      if (navbarY + navbar.clientHeight > window.innerHeight)
+        navbarY = window.innerHeight - navbar.clientHeight;
+    }
 
     if (navbarX > (window.innerWidth / 2) - (navbar.clientWidth / 2) && navbar.classList.contains('vertical')) navbar.classList.add('left')
     else navbar.classList.remove('left');
 
-    if (navbarY < (window.innerHeight / 2) - (navbar.clientHeight / 2) && !navbar.classList.contains('vertical')) navbar.classList.add('bottom')
-    else navbar.classList.remove('bottom');
+    if (!this.isPhone) {
+      if (navbarY < (window.innerHeight / 2) - (navbar.clientHeight / 2) && !navbar.classList.contains('vertical')) navbar.classList.add('bottom')
+      else navbar.classList.remove('bottom');
+    }
 
     navbar.style.left = `${navbarX}px`;
-    navbar.style.top = `${navbarY}px`;
+
+    if (!this.isPhone)
+      navbar.style.top = `${navbarY}px`;
   }
 
   setPositions() {
@@ -206,6 +216,16 @@ class NavBar extends React.Component<NavBarProps> {
     // Enable Scrolling
     const body = document.getElementsByTagName('body')[0] as HTMLElement;
     body.style.overflowY = 'scroll';
+  }
+
+  stopMobileButtonHover() {
+    const buttons = document.getElementsByClassName('navbar-item') as HTMLCollectionOf<HTMLElement>;
+    for (let button of buttons) {
+      button.classList.add('nohover');
+      setTimeout(() => {
+        button.classList.remove('nohover');
+      }, 100);
+    }
   }
 
   render() {
