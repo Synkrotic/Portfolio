@@ -51,17 +51,35 @@ class NavBarItem extends React.Component<NavBarItemProps> {
 
   handleClick() {
     this.buttonFunction();
-    this.Icon = this.IconFill;
+    this.Icon = this.Icon === this.IconFill ? this.IconOutline : this.IconFill;
     this.checkActive();
     this.forceUpdate();
   }
 
   render() {
     return (
-      <button className={`navbar-item ${this.extraClass}`} onClick={() => this.handleClick()}>
-        <this.Icon className="icon" />
-        <span>{this.title}</span>
-      </button>
+      <>
+        <button
+          className={`navbar-item ${this.extraClass !== undefined ? this.extraClass : ""}`}
+          id={this.id.toString()}
+          onClick={
+            () => this.handleClick()
+          }
+          onMouseEnter={
+            () => {
+              setTimeout(() => {
+                const stretch = document.getElementsByClassName('navbar-stretch')[0] as HTMLElement;
+                const button = document.getElementById(this.id.toString()) as HTMLElement;
+                stretch.style.left = `0px`;
+                stretch.style.left = `calc(${-stretch.getBoundingClientRect().left + button.getBoundingClientRect().left}px - 0.3rem)`;
+              }, 200);
+            }
+          }
+        >
+          <this.Icon className="icon" />
+          <span>{this.title}</span>
+        </button>
+      </>
     );
   }
 }

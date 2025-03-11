@@ -15,7 +15,21 @@ body {
   padding: 0;
   font-family: 'Diodrum', 'Roboto', sans-serif;
   background-color: var(--primary_color);
+  background-image: url(assets/Images/background.webp);
+  background-repeat: no-repeat;
+  background-position: 50% 0%;
+  background-size: cover;
   color: var(--quaternary_color);
+}
+
+body > * {
+  mask-image: none;
+}
+
+body.cancel-scroll {
+  overflow: hidden;
+  -webkit-overflow-scrolling: hidden;
+  -ms-overflow-style: hidden;
 }
 
 #root {

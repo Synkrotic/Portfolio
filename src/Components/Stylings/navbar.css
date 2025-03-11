@@ -51,8 +51,6 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  box-shadow: 0.75em 0.75em 1.5em rgba(0, 0, 0, 0.5);
-  mix-blend-mode: multiply;
 }
 
 .navbar-container.vertical {
@@ -86,32 +84,78 @@
 .purple-hover:not(.rebecca) ~ .navbar-item:hover:not(.nohover) {
   background-color: rgba(102, 51, 153, 0.7);
   height: calc(10vh - 0.6rem);
-  transform: translateY(-1vh);
-  outline: 0.4rem solid rgba(0, 0, 0, 0.7);
-  transition: 0.3s;
   justify-content: space-around;
+  transition: 0.3s;
+}
+.navbar-container:not(.vertical) > .purple-hover:not(.rebecca) ~ .navbar-item:hover:not(.nohover)::before,
+.navbar-container.bottom > .purple-hover:not(.rebecca) ~ .navbar-item:hover:not(.nohover)::before,
+.navbar-container.vertical > .purple-hover:not(.rebecca) ~ .navbar-item:hover:not(.nohover)::before,
+.navbar-container.vertical.left > .purple-hover:not(.rebecca) ~ .navbar-item:hover:not(.nohover)::before {
+  content: '';
+  mix-blend-mode: screen;
+  position: absolute;
+  height: 10vh;
+  width: 10vh;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.7);
 }
 
-.navbar-container:not(.vertical) > .purple-hover:not(.rebecca) ~ .navbar-item:hover:not(.nohover) {
-  transform: translateY(-1vh);
+.navbar-container:not(.vertical) > .purple-hover:not(.rebecca) ~ .navbar-item:hover:not(.nohover)::before {
+  animation: showNavbarStretchUp 0.3s 1;
+  clip-path: inset(0 0 calc(8vh - 1px) 0);
 }
-.navbar-container.bottom > .purple-hover:not(.rebecca) ~ .navbar-item:hover:not(.nohover) {
-  transform: translateY(1vh);
+.navbar-container:not(.vertical).bottom > .purple-hover:not(.rebecca) ~ .navbar-item:hover:not(.nohover)::before {
+  animation: showNavbarStretchDown 0.3s 1;
+  clip-path: inset(8vh 0 0 0);
 }
-.navbar-container.vertical > .purple-hover:not(.rebecca) ~ .navbar-item:hover:not(.nohover) {
-  transform: translateX(1vh);
+.navbar-container.vertical > .purple-hover:not(.rebecca) ~ .navbar-item:hover:not(.nohover)::before {
+  animation: showNavbarStretchRight 0.3s 1;
+  clip-path: inset(0 0 0 8vh);
 }
-.navbar-container.vertical.left > .purple-hover:not(.rebecca) ~ .navbar-item:hover:not(.nohover) {
-  transform: translateX(-1vh);
+.navbar-container.vertical.left > .purple-hover:not(.rebecca) ~ .navbar-item:hover:not(.nohover)::before {
+  animation: showNavbarStretchLeft 0.3s 1;
+  clip-path: inset(0 calc(8vh - 1px) 0 0);
 }
 
-.navbar-item.proximity {
-  background-color: rgba(102, 51, 153, 0.7);
-  height: calc(9vh - 0.6rem);
-  transform: translateY(-0.5vh);
-  outline: 0.4rem solid rgba(0, 0, 0, 0.7);
-  transition: 0.3s;
-  justify-content: space-around;
+.navbar-container:not(.vertical) > .purple-hover:not(.rebecca) ~ .navbar-item:hover:not(.nohover) { transform: translateY(-1vh); }
+.navbar-container.bottom > .purple-hover:not(.rebecca) ~ .navbar-item:hover:not(.nohover) { transform: translateY(1vh); }
+.navbar-container.vertical > .purple-hover:not(.rebecca) ~ .navbar-item:hover:not(.nohover) { transform: translateX(1vh); }
+.navbar-container.vertical.left > .purple-hover:not(.rebecca) ~ .navbar-item:hover:not(.nohover) { transform: translateX(-1vh); }
+
+@keyframes showNavbarStretchDown {
+  from {
+    transform: translateY(calc(1vh - 1px));
+    clip-path: inset(8vh 0 2vh 0);
+  } to {
+    transform: translateY(-1px);
+  }
+}
+
+@keyframes showNavbarStretchUp {
+  from {
+    transform: translateY(-1vh);
+    clip-path: inset(2vh 0 8vh 0);
+  } to {
+    transform: translateY(1px);
+  }
+}
+
+@keyframes showNavbarStretchRight {
+  from {
+    transform: translateX(-1vh);
+    clip-path: inset(0 2vh 0 8vh);
+  } to {
+    transform: translateX(1px);
+  }
+}
+
+@keyframes showNavbarStretchLeft {
+  from {
+    transform: translateX(1vh);
+    clip-path: inset(0 8vh 0 2vh);
+  } to {
+    transform: translateX(-1px);
+  }
 }
 
 .navbar-item .icon {

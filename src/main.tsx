@@ -6,7 +6,7 @@ import NavBar from './Components/NavBar.tsx'
 import { Analytics } from "@vercel/analytics/react"
 // import { SpeedInsights } from "@vercel/speed-insights/next"
 
-const isPhone = window.matchMedia('(max-width: 600px)').matches
+const isPhone = window.matchMedia('(max-width: 768px)').matches
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

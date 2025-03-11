@@ -109,7 +109,7 @@ class NavBar extends React.Component<NavBarProps> {
 
     // Disable scrolling
     const body = document.getElementsByTagName('body')[0] as HTMLElement;
-    body.style.overflowY = 'hidden';
+    body.classList.add('cancel-scroll');
 
     this.setPositions();
     this.setSnapPointSize();
@@ -216,7 +216,7 @@ class NavBar extends React.Component<NavBarProps> {
 
     // Enable Scrolling
     const body = document.getElementsByTagName('body')[0] as HTMLElement;
-    body.style.overflowY = 'scroll';
+    body.classList.remove('cancel-scroll');
   }
 
   stopMobileButtonHover() {
@@ -262,7 +262,7 @@ class NavBar extends React.Component<NavBarProps> {
           ))
         } 
         <nav className='navbar-container'>
-          <button 
+          <button
             className={`navbar-item nohover purple-hover movebutton`}
             
             onMouseDown={() => { this.moveable = true; }}
@@ -270,7 +270,8 @@ class NavBar extends React.Component<NavBarProps> {
           >
             <Move />
           </button>
-            {this.navItems}
+          {this.navItems}
+          <span className='navbar-stretch'></span>
         </nav>
       </div>
     )
