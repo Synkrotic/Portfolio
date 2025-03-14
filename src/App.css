@@ -109,9 +109,11 @@
   transform: translate(-12vw, -35%);
   width: 20vh;
   height: 20vh;
-  background-image: url("./assets/Images/computer_icon.webp");
   background-size: cover;
 }
+#my-info::before { background-image: url("./assets/Images/me.webp"); }
+#experience-info::before { background-image: url("./assets/Images/experience.webp"); }
+#hobbies-info::before { background-image: url("./assets/Images/hobbies.webp"); }
 
 .about-me-text {
   width: 40vw;
@@ -159,8 +161,6 @@
     transform: translate(0, -8.5vh);
     width: 15vh;
     height: 15vh;
-    background-image: url("./assets/Images/computer_icon.webp");
-    background-size: cover;
   }
 
   .about-me-text {

@@ -69,7 +69,7 @@ function App() {
           <h2 className="regular-header about-me-header">About me (Test Data)</h2>
 
           <div className="about-me-text-container">
-            <h3 className="about-me-text-header small-header">Me</h3>
+            <h3 className="about-me-text-header small-header" id="my-info">Me</h3>
             <p className="about-me-text regular-text">
               I am an avid learner and enjoy keeping up with the latest trends in technology.<br />
               In my free time, I like to contribute to open-source projects and write technical blogs.<br />
@@ -80,7 +80,7 @@ function App() {
           </div>
 
           <div className="about-me-text-container">
-            <h3 className="about-me-text-header small-header">Experience</h3>
+            <h3 className="about-me-text-header small-header" id="experience-info">Experience</h3>
             <p className="about-me-text regular-text">
               I have been working as a software engineer for over 5 years.<br />
               I have experience with a wide range of technologies and programming languages.<br />
@@ -92,7 +92,7 @@ function App() {
           </div>
 
           <div className="about-me-text-container">
-            <h3 className="about-me-text-header small-header">Hobbies</h3>
+            <h3 className="about-me-text-header small-header" id="hobbies-info">Hobbies</h3>
             <p className="about-me-text regular-text">
               I am a software engineer who loves to create web applications.<br />
               I am currently working as a frontend developer at a company in the Netherlands.<br />
