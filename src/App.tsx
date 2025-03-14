@@ -66,10 +66,34 @@ function App() {
       </header>
       <main>
         <article className="about-me-container">
-          <h2 className="regular-header about-me-header">About me</h2>
+          <h2 className="regular-header about-me-header">About me (Test Data)</h2>
+
           <div className="about-me-text-container">
-            <h3 className="about-me-text-header">My Work</h3>
-            <p className="about-me-text">
+            <h3 className="about-me-text-header small-header">Me</h3>
+            <p className="about-me-text regular-text">
+              I am an avid learner and enjoy keeping up with the latest trends in technology.<br />
+              In my free time, I like to contribute to open-source projects and write technical blogs.<br />
+              I also enjoy mentoring junior developers and sharing my knowledge with the community.<br />
+              When I am not coding, I love to travel, read books, and play video games.<br />
+              I believe in continuous improvement and strive to be a better version of myself every day.<br />
+            </p>
+          </div>
+
+          <div className="about-me-text-container">
+            <h3 className="about-me-text-header small-header">Experience</h3>
+            <p className="about-me-text regular-text">
+              I have been working as a software engineer for over 5 years.<br />
+              I have experience with a wide range of technologies and programming languages.<br />
+              I have worked on a variety of projects, from small websites to large web applications.<br />
+              I am always looking for new challenges and opportunities to learn new things.<br />
+              I am passionate about creating clean and maintainable code and I love to work in a team.<br />
+              I am always looking for new ways to improve my skills and I am not afraid to take on new challenges.<br />
+            </p>
+          </div>
+
+          <div className="about-me-text-container">
+            <h3 className="about-me-text-header small-header">Hobbies</h3>
+            <p className="about-me-text regular-text">
               I am a software engineer who loves to create web applications.<br />
               I am currently working as a frontend developer at a company in the Netherlands.<br />
               My main focus is on creating user-friendly and accessible web applications.<br />
@@ -78,6 +102,7 @@ function App() {
               I am always looking for new ways to improve my skills and I am not afraid to take on new challenges.<br />
             </p>
           </div>
+
         </article>
       </main>
     </div>

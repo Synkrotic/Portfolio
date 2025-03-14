@@ -20,6 +20,7 @@ body {
   background-position: 50% 0%;
   background-size: cover;
   color: var(--quaternary_color);
+  height: max-content;
 }
 
 body > * {
@@ -34,4 +35,10 @@ body.cancel-scroll {
 
 #root {
   position: relative;
+}
+
+@media screen and (max-width: 768px) {
+  body {
+    background-size: auto;
+  }
 }

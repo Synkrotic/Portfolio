@@ -7,8 +7,8 @@
 
 .app {
   height: max-content;
-  width: 100vw;
   position: absolute;
+  width: 100vw;
   display: flex;
   flex-wrap: nowrap;
   flex-direction: column;
@@ -46,19 +46,15 @@
   min-height: 7rem;
 }
 
-@media screen and (max-width: 768px) {
-  .big-header {
-    font-size: 12vw;
-    max-width: 80vw;
-  }
-
-  .regular-header {
-    font-size: 6vw;
-    max-width: 70vw;
-  }
+.small-header {
+  font-size: 2.5rem;
 }
 
-.App main {
+.regular-text {
+  font-size: auto;
+}
+
+.app main {
   flex: 1;
   width: 100vw;
   display: flex;
@@ -66,11 +62,10 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  transform: translateY(calc(100vh - 86vw));
 }
 
 .about-me-container {
-  height: 100vh;
+  height: 150vh;
   width: 100vw;
   display: flex;
   flex-wrap: nowrap;
@@ -90,14 +85,86 @@
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
-  /* outline: 3px solid red; */
+  margin-bottom: 20vh;
 }
 
 .about-me-text-header {
-  margin-left: calc(100vw / 3 - 10vw);
-  outline: 3px solid red;
+  margin-left: 20vw;
+  width: 12vw;
+}
+.about-me-text-header::after {
+  content: "";
+  display: block;
+  position: absolute;
+  transform: translate(12vw, -60%);
+  width: 1vw;
+  height: 20vh;
+  background-color: snow;
+}
+
+.about-me-text-header::before {
+  content: "";
+  display: block;
+  position: absolute;
+  transform: translate(-12vw, -35%);
+  width: 20vh;
+  height: 20vh;
+  background-image: url("./assets/Images/computer_icon.webp");
+  background-size: cover;
 }
 
 .about-me-text {
-  outline: 3px solid red;
+  width: 40vw;
+  margin-right: 2vw;
+}
+
+@media screen and (max-width: 768px) {
+  .big-header {
+    font-size: 12vw;
+    max-width: 80vw;
+  }
+
+  .regular-header {
+    font-size: 6vw;
+    max-width: 70vw;
+  }
+
+  .about-me-header {
+    margin: 1vh 0px 10vh 0px;
+  }
+
+  .about-me-container {
+    height: 170vh;
+  }
+
+  .about-me-text-container {
+    flex-direction: column;
+    margin-bottom: 17.5vh;
+  }
+
+  .about-me-text-header {
+    margin-left: 0vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5vh;
+  }
+  .about-me-text-header::after {
+    transform: translate(0, 4vh);
+    width: 80vw;
+    height: 1vh;
+  }
+  .about-me-text-header::before {
+    transform: translate(0, -8.5vh);
+    width: 15vh;
+    height: 15vh;
+    background-image: url("./assets/Images/computer_icon.webp");
+    background-size: cover;
+  }
+
+  .about-me-text {
+    width: 90vw;
+    margin-right: 0vw;
+  }
 }
