@@ -108,8 +108,9 @@ class NavBar extends React.Component<NavBarProps> {
     if (endlocation.y > window.innerHeight) endlocation.y = window.innerHeight;
 
     // Disable scrolling
-    const body = document.getElementsByTagName('body')[0] as HTMLElement;
-    body.classList.add('cancel-scroll');
+    const app = document.getElementsByClassName('app')[0] as HTMLElement;
+    app.classList.add('no-scroll');
+    document.body.classList.add('no-scroll');
 
     this.setPositions();
     this.setSnapPointSize();
@@ -215,8 +216,9 @@ class NavBar extends React.Component<NavBarProps> {
     for (let snapPoint of snapPoints) { snapPoint.style.display = 'none'; }
 
     // Enable Scrolling
-    const body = document.getElementsByTagName('body')[0] as HTMLElement;
-    body.classList.remove('cancel-scroll');
+    const app = document.getElementsByClassName('app')[0] as HTMLElement;
+    app.classList.remove('no-scroll');
+    document.body.classList.remove('no-scroll');
   }
 
   stopMobileButtonHover() {
@@ -231,46 +233,48 @@ class NavBar extends React.Component<NavBarProps> {
 
   render() {
     return (
-      <div className='navbar-wrapper'
-        onMouseUp={() => { this.stopMove(); }}
-        onTouchEnd={() => { this.stopMove(); }}
-        onTouchCancel={() => { this.stopMove(); }}
+      <>
+        <div className='navbar-wrapper'
+          onMouseUp={() => { this.stopMove(); }}
+          onTouchEnd={() => { this.stopMove(); }}
+          onTouchCancel={() => { this.stopMove(); }}
 
-        onMouseMove={(e) => {
-          let mouse = e as React.MouseEvent;
-          this.moveNavBar({ x: mouse.clientX, y: mouse.clientY });
-        }}
-        onTouchMove={(e) => {
-          let touch = e.touches[0];
-          this.moveNavBar({ x: touch.clientX, y: touch.clientY });
-        }}
-      >
-        {
-          this.positions.map((position, i) => (
-            <div
-              key={i}
-              className='navbar-snappoint'
-              style={{
-                left: `${position.x}px`,
-                top: `${position.y}px`,
-                display: 'none',
-              }}
-            />
-          ))
-        } 
-        <nav className='navbar-container'>
-          <button
-            className={`navbar-item nohover purple-hover movebutton`}
-            
-            onMouseDown={() => { this.moveable = true; }}
-            onTouchStart={() => { this.moveable = true; }}
-          >
-            <Move />
-          </button>
-          {this.navItems}
-          <span className='navbar-stretch'></span>
-        </nav>
-      </div>
+          onMouseMove={(e) => {
+            let mouse = e as React.MouseEvent;
+            this.moveNavBar({ x: mouse.clientX, y: mouse.clientY });
+          }}
+          onTouchMove={(e) => {
+            let touch = e.touches[0];
+            this.moveNavBar({ x: touch.clientX, y: touch.clientY });
+          }}
+        >
+          {
+            this.positions.map((position, i) => (
+              <div
+                key={i}
+                className='navbar-snappoint'
+                style={{
+                  left: `${position.x}px`,
+                  top: `${position.y}px`,
+                  display: 'none',
+                }}
+              />
+            ))
+          } 
+          <nav className='navbar-container'>
+            <button
+              className={`navbar-item nohover purple-hover movebutton`}
+
+              onMouseDown={() => { this.moveable = true; }}
+              onTouchStart={() => { this.moveable = true; }}
+            >
+              <Move />
+            </button>
+            {this.navItems}
+            <span className='navbar-stretch'></span>
+          </nav>
+        </div>
+      </>
     )
   }
 }

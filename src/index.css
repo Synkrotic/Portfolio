@@ -23,15 +23,13 @@ body {
   height: max-content;
 }
 
+.no-scroll {
+  overflow: hidden;
+}
+
 body > * {
   mask-image: none;
 }
-
-/* body.cancel-scroll {
-  overflow: hidden;
-  -webkit-overflow-scrolling: hidden;
-  -ms-overflow-style: hidden;
-} */
 
 #root {
   position: relative;
