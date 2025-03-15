@@ -11,6 +11,6 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Analytics />
     <App />
-    <NavBar startPos={isPhone ? 1 : 4} />
+    {/* <NavBar startPos={isPhone ? 1 : 4} /> */}
   </StrictMode>
 )

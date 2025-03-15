@@ -7,9 +7,8 @@ import {
 import { Move } from 'react-feather'
 import { FaUser, FaRegUser } from 'react-icons/fa6'
 
-import navbarSettingsFunction from './ButtonFunctions/navbarSettings'
-import scrollHome from './ButtonFunctions/scrollHome'
-import scrollAbout from './ButtonFunctions/scrollAbout'
+import navbarSettingsFunction from '../Logic/ButtonFunctions/navbarSettings'
+import scrollManager from '../Logic/ButtonFunctions/scrollManager'
 
 import './Stylings/navbar.css'
 import NavBarItem from './NavBarItem'
@@ -35,20 +34,21 @@ class NavBar extends React.Component<NavBarProps> {
     super(props)
     this.navItemValues = [
       {
-        buttonFunction: () => { scrollHome(); this.stopMobileButtonHover(); },
+        buttonFunction: () => { scrollManager.scrollHome(); this.stopMobileButtonHover(); },
         deactivateRange: { top: 0, bottom: window.innerHeight},
         IconFill: AiFillHome,
         IconOutline: AiOutlineHome,
         title: 'Home'
       }, { 
-        buttonFunction: () => { scrollAbout(); this.stopMobileButtonHover(); },
-        deactivateRange: { top: window.innerHeight, bottom: window.innerHeight * 2 },
+        buttonFunction: () => { scrollManager.scrollAbout(); this.stopMobileButtonHover(); },
+        deactivateRange: { top: window.innerHeight, bottom: window.innerHeight * 2.2 },
         extraClass: "smaller",
         IconFill: FaUser,
         IconOutline: FaRegUser,
         title: 'About Me'
       }, { 
-        buttonFunction: () => { this.stopMobileButtonHover(); },
+        buttonFunction: () => { scrollManager.scrollProjects(); this.stopMobileButtonHover(); },
+        deactivateRange: { top: window.innerHeight * 2.2, bottom: window.innerHeight * 3.3 },
         IconFill: AiFillProduct,
         IconOutline: AiOutlineProduct,
         title: 'Projects'
@@ -231,9 +231,7 @@ class NavBar extends React.Component<NavBarProps> {
 
   render() {
     return (
-      <div
-        className='navbar-wrapper'
-
+      <div className='navbar-wrapper'
         onMouseUp={() => { this.stopMove(); }}
         onTouchEnd={() => { this.stopMove(); }}
         onTouchCancel={() => { this.stopMove(); }}
@@ -246,7 +244,6 @@ class NavBar extends React.Component<NavBarProps> {
           let touch = e.touches[0];
           this.moveNavBar({ x: touch.clientX, y: touch.clientY });
         }}
-
       >
         {
           this.positions.map((position, i) => (

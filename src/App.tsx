@@ -1,4 +1,5 @@
 import { useEffect } from "react"
+import ProjectCard from "./Components/ProjectCard";
 import "./App.css"
 
 function App() {
@@ -54,6 +55,7 @@ function App() {
 
   useEffect(() => {
     changeProfession();
+    document.getElementById('projects-header')?.scrollIntoView({behavior: 'smooth'});
   }, [])
 
   return (
@@ -66,8 +68,7 @@ function App() {
       </header>
       <main>
         <article className="about-me-container">
-          <h2 className="regular-header about-me-header">About me (Test Data)</h2>
-
+          <h2 className="regular-header about-me-header" id="about-me-header">About me (Test Data)</h2>
           <div className="about-me-text-container">
             <h3 className="about-me-text-header small-header" id="my-info">Me</h3>
             <p className="about-me-text regular-text">
@@ -104,6 +105,12 @@ function App() {
           </div>
 
         </article>
+        <section id="projects-wrapper">
+          <h2 className="regular-header" id="projects-header">Projects</h2>
+          <div className="projects-container">
+            <ProjectCard url="https://portfolio-synkrotics-projects.vercel.app/" />
+          </div>
+        </section>
       </main>
     </div>
   )

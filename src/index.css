@@ -27,11 +27,11 @@ body > * {
   mask-image: none;
 }
 
-body.cancel-scroll {
+/* body.cancel-scroll {
   overflow: hidden;
   -webkit-overflow-scrolling: hidden;
   -ms-overflow-style: hidden;
-}
+} */
 
 #root {
   position: relative;
