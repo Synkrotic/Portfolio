@@ -55,7 +55,6 @@ function App() {
 
   useEffect(() => {
     changeProfession();
-    document.getElementById('projects-header')?.scrollIntoView({behavior: 'smooth'});
   }, [])
 
   return (
