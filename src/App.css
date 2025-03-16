@@ -94,6 +94,7 @@
 
 .about-me-text-header {
   margin-left: 20vw;
+  text-transform: capitalize;
   width: 12vw;
 }
 .about-me-text-header::after {
@@ -116,7 +117,7 @@
   background-size: cover;
 }
 
-#my-info::before { background-image: url("./assets/Images/me.webp"); }
+#me-info::before { background-image: url("./assets/Images/me.webp"); }
 #experience-info::before { background-image: url("./assets/Images/experience.webp"); }
 #hobbies-info::before { background-image: url("./assets/Images/hobbies.webp"); }
 
@@ -147,6 +148,9 @@
   justify-content: flex-start;
   align-items: flex-start;
   padding: 3.125vw;
+}
+.projects-container:has(.project-container.active) {
+  padding: 0px;
 }
 
 
