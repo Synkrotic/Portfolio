@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import ProjectCard from "./Components/ProjectCard";
 import "./App.css"
 import AboutMeTopic from "./Components/AboutMeTopic";
@@ -13,6 +13,7 @@ function App() {
   ]
 
   const navbar = useRef<NavBar>(null);
+  const [snapPositions, setSnapPositions] = useState<{ x: number, y: number }[]>();
 
   function changeProfession() {
     const profession = document.getElementById("header-profession") as HTMLHeadingElement;
@@ -21,7 +22,6 @@ function App() {
     let letNum = 0;
     let goForwards = true;
     let timeout = false;
-
 
     setInterval(() => {
       if (!goForwards) return;
@@ -57,7 +57,24 @@ function App() {
     }, 1000/professionText.length)
   }
 
+  function getSnapPoints(location?: { x: number, y: number }): HTMLCollectionOf<Element> | Element | null {
+    let snapPoints = document.getElementsByClassName("navbar-snappoint");
+    if (location) {
+      for (const snapPoint of snapPoints) {
+        if (snapPoint.classList.contains(`${location.x}${location.y}`)) {
+          return snapPoint;
+        }
+      }
+      return null;
+    }
+    return snapPoints;
+  }
+
   useEffect(() => {
+    if (navbar.current) {
+      navbar.current.snapPositionManager.refresh();
+      setSnapPositions(navbar.current.snapPositionManager.getHorizontal());
+    }
     changeProfession();
   }, [])
 
@@ -109,7 +126,13 @@ function App() {
           </section>
         </main>
       </div>
-      <NavBar startPos={0} ref={navbar} />
+      <div className="snap-position-container" id="snap-container">
+        {snapPositions && snapPositions.map((pos, index) => {
+          return <div key={index} className={`navbar-snappoint auto-resize ${pos.x}${pos.y}`} style={{ top: pos.y, left: pos.x }}></div>
+        }
+      )}
+      </div>
+      <NavBar startPos={0} ref={navbar} snapPositionsFunc={setSnapPositions} getSnapPoints={getSnapPoints} />
     </>
   )
 }
