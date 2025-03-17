@@ -21,8 +21,7 @@ class NavBar extends Component<NavBarProps> {
   private container = createRef<HTMLElement>();
   private moveButton = createRef<HTMLButtonElement>();
   
-  // private isVertical = true;
-  // private isPhone = window.innerWidth < 768;
+  private isVertical = false;
 
   public moveable = false;
 
@@ -41,16 +40,32 @@ class NavBar extends Component<NavBarProps> {
     });
   }
 
+  turnNavbar() {
+    if (!this.container.current) return;
+    this.container.current.classList.toggle('vertical');
+    this.isVertical = !this.isVertical;
 
-  
+    const style = window.getComputedStyle(this.container.current);
+    this.moveNavbarTo({ x: parseFloat(style.left), y: parseFloat(style.top) });
 
+    this.adjustDirection();
+  }
 
   moveNavbarTo(endlocation: { x: number, y: number }) {
     if (!this.container.current) return;
 
-    const paddingLeft = parseFloat(window.getComputedStyle(this.container.current).paddingLeft);
-    let adjustedX = endlocation.x - this.container.current.offsetHeight / 2 - paddingLeft;
-    let adjustedY = endlocation.y - this.container.current.offsetHeight / 2;
+    let adjustedX = 0;
+    let adjustedY = 0;
+
+    if (!this.isVertical) {
+      const paddingLeft = parseFloat(window.getComputedStyle(this.container.current).paddingLeft);
+      adjustedX = endlocation.x - this.container.current.offsetHeight / 2 - paddingLeft;
+      adjustedY = endlocation.y - this.container.current.offsetHeight / 2;
+    } else {
+      const paddingTop = parseFloat(window.getComputedStyle(this.container.current).paddingTop);
+      adjustedX = endlocation.x - this.container.current.offsetWidth / 2;
+      adjustedY = endlocation.y - this.container.current.offsetWidth / 2 - paddingTop;
+    }
 
     if (adjustedX < 0) adjustedX = 0;
     if (adjustedY < 0) adjustedY = 0;
@@ -63,6 +78,26 @@ class NavBar extends Component<NavBarProps> {
     this.container.current.style.top = `${adjustedY}px`;
   }
 
+  adjustDirection() {
+    if (!this.container.current) return;
+    const middleY = parseFloat(window.getComputedStyle(this.container.current).top) + this.container.current.offsetHeight / 2;
+
+    if (this.isVertical) {
+      const middleX = parseFloat(window.getComputedStyle(this.container.current).left) + this.container.current.offsetWidth / 2;
+      if (middleX > window.innerWidth / 2) {
+        this.container.current.classList.add('left');
+      } else {
+        this.container.current.classList.remove('left');
+      }
+    } else {
+      if (middleY > window.innerHeight / 2) {
+        this.container.current.classList.remove('bottom');
+      } else {
+        this.container.current.classList.add('bottom');
+      }
+    }
+  }
+
   activateMove() {
     this.moveable = true;
     this.moveButton.current?.classList.add('rebecca');
@@ -71,6 +106,8 @@ class NavBar extends Component<NavBarProps> {
   deactivateMove() {
     this.moveable = false;
     this.moveButton.current?.classList.remove('rebecca');
+
+    this.adjustDirection();
   }
 
 
@@ -86,14 +123,12 @@ class NavBar extends Component<NavBarProps> {
           <Move />
         </button>
         <NavBarItem
-          shownIcon={AiOutlineHome}
           activeIcon={AiFillHome}
           regularIcon={AiOutlineHome}
           title='Home'
           action={ScrollManager.scrollHome}
         />
         <NavBarItem
-          shownIcon={FaRegUser}
           activeIcon={FaUser}
           regularIcon={FaRegUser}
           title='About Me'
@@ -101,25 +136,22 @@ class NavBar extends Component<NavBarProps> {
           extraClasses='smaller'
         />
         <NavBarItem
-          shownIcon={AiOutlineProduct}
           activeIcon={AiFillProduct}
           regularIcon={AiOutlineProduct}
           title='Projects'
           action={ScrollManager.scrollProjects}
         />
         <NavBarItem
-          shownIcon={AiOutlineGithub}
           activeIcon={AiFillGithub}
           regularIcon={AiOutlineGithub}
           title='Github'
           action={() => { window.open('https://www.github.com/Synkrotic/'); }}
         />
         <NavBarItem
-          shownIcon={HiArrowTurnRightDown}
           activeIcon={HiArrowTurnRightUp}
           regularIcon={HiArrowTurnRightDown}
           title='Turn'
-          action={() => { console.log('turn'); }}
+          action={() => { this.turnNavbar(); }}
         />
       </nav>
     )

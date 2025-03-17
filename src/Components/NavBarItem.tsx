@@ -1,7 +1,6 @@
-import React from "react";
+import { Component } from "react";
 
 interface ItemProps {
-  shownIcon: any,
   activeIcon: any,
   regularIcon: any,
   
@@ -10,25 +9,30 @@ interface ItemProps {
   extraClasses?: string
 }
 
-const NavBarItem = ({ shownIcon, activeIcon, regularIcon, title, action, extraClasses }: ItemProps) => {
-  
-  function handleClick() {
-    if (!action) return;
-
-    action();
-    swapIcon();
-  }
-  
-  function swapIcon() {
-    shownIcon = shownIcon == activeIcon ? regularIcon : activeIcon;
+class NavBarItem extends Component<ItemProps> {
+  state = {
+    shownIcon: this.props.regularIcon
   }
 
-  return (
-    <button className={`navbar-item ${extraClasses ? extraClasses : ''}`} onClick={() => { handleClick(); }}>
-      {React.createElement(shownIcon, { className: 'icon' })}
-      <span>{title}</span>
-    </button>
-  )
+  handleClick() {
+    if (!this.props.action) return;
+
+    this.props.action();
+    this.swapIcon();
+  }
+
+  swapIcon() {
+    this.setState({ shownIcon: this.state.shownIcon == this.props.activeIcon ? this.props.regularIcon : this.props.activeIcon });
+  }
+
+  render() {
+    return (
+      <button className={`navbar-item ${this.props.extraClasses ? this.props.extraClasses : ''}`} onClick={() => { this.handleClick(); }}>
+        <this.state.shownIcon className={'icon'} />
+        <span>{this.props.title}</span>
+      </button>
+    )
+  }
 }
 
 export default NavBarItem
