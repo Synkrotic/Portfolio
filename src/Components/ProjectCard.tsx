@@ -2,12 +2,12 @@ import { useEffect, useRef } from "react";
 import "./Stylings/projectCard.css"
 
 interface ProjectCardProps {
-  title?: string;
-  description?: string;
   url: string;
+  title?: string;
+  children?: React.ReactNode;
 }
 
-const ProjectCard = ({ title, description, url }: ProjectCardProps) => {
+const ProjectCard = ({ title, children, url }: ProjectCardProps) => {
 
   const projectContainerRef = useRef<HTMLDivElement>(null);
 
@@ -34,8 +34,8 @@ const ProjectCard = ({ title, description, url }: ProjectCardProps) => {
     <div className="project-container" ref={projectContainerRef}>
       <iframe className="project-iframe" src={url} loading="lazy"/>
       <div className="project-card" onClick={() => { loadWebsite(); }} >
-        <h3 className="project-title small-header">{title}</h3>
-        <p className="project-description">{description}</p>
+        <h3 className="project-title micro-header">{title}</h3>
+        <p className="project-description">{children}</p>
       </div>
     </div>
   )

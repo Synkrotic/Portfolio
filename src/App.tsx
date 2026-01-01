@@ -123,17 +123,43 @@ function App() {
           <section id="projects-wrapper">
             <h2 className="regular-header" id="projects-header">Projects</h2>
             <div className="projects-container">
-              <ProjectCard url="https://portfolio-synkrotics-projects.vercel.app/" />
-              <ProjectCard url="https://openai.com/" />
-              <ProjectCard url="https://nextjs.org/" />
+              <ProjectCard
+                url="https://portfolio-synkrotics-projects.vercel.app/"
+                title="Portfolio"
+              >
+                My professional portfolio
+              </ProjectCard>
+              <ProjectCard 
+                url="https://openai.com/"
+                title="ChatGPT"
+              >
+                OpenAI's generative AI
+              </ProjectCard>
+              <ProjectCard
+                url="https://en.wikipedia.org/wiki/Main_Page"
+                title="Wikipedia"
+              >
+                A trusted source of general information
+              </ProjectCard>
 
-              <ProjectCard url="https://tailwindcss.com/" />
-              <ProjectCard url="https://codesandbox.io/embed/new" />
-              <ProjectCard url="https://glitch.com/embed/#!/embed/remix" />
-
-              <ProjectCard url="https://threejs.org/examples/#webgl_animation_cloth" />
-              <ProjectCard url="https://phaser.io/examples/v3/view/scenes/scene-from-text" />
-              <ProjectCard url="https://observablehq.com/embed/@d3/bar-chart" />
+              <ProjectCard 
+                url="http://paperjs.org/examples/boolean-operations/"
+                title="Paper.js"
+              >
+                Vector graphics framework for JavaScript
+              </ProjectCard>
+              <ProjectCard
+                url="https://threejs.org/examples/webgl_shaders_sky.html"
+                title="Three.js"
+              >
+                An example of how to make a sky in the Three.js framework
+              </ProjectCard>
+              <ProjectCard
+                url="https://turbowarp.org/60917032/embed"
+                title="TurboWarp"
+              >
+                A Scratch game about an apple, exported to JavaScript
+              </ProjectCard>
             </div>
           </section>
         </main>

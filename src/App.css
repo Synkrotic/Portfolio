@@ -67,6 +67,10 @@
   font-size: 2.5rem;
 }
 
+.micro-header {
+  font-size: 1.5rem;
+}
+
 .regular-text {
   font-size: auto;
 }
