@@ -2,8 +2,6 @@ class SnapPositionManager {
   private verticalPositions: { x: number, y: number }[] = [];
   private horizontalPositions: { x: number, y: number }[] = [];
 
-  private isPhone: boolean = window.innerWidth < 768;
-
   private marginX: GLfloat = window.innerWidth * 1/50
   private marginY: GLfloat = window.innerHeight * 1/30
   
