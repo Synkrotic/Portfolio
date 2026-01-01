@@ -6,10 +6,8 @@ import NavBar from "./Components/NavBar";
 
 function App() {
   const professions = [
-    "Software engineer",
-    "Frontend developer",
-    "Backend developer",
-    "Mobile app developer",
+    "Frontend web-developer",
+    "Android developer",
   ]
 
   const navbar = useRef<NavBar>(null);
@@ -21,40 +19,35 @@ function App() {
     let professionText = professions[professionNum];
     let letNum = 0;
     let goForwards = true;
-    let timeout = false;
+    let isWaiting = false;
 
-    setInterval(() => {
-      if (!goForwards) return;
-      timeout = false;
-      profession.innerText = "";
+    const interval = setInterval(() => {
       professionText = professions[professionNum];
-      if (letNum < professionText.length) {
-        profession.innerText += professionText.substring(0, letNum);
-        letNum++;
-      } else {
-        profession.innerText = professionText;
-        setTimeout(() => {
-          goForwards = false;
-        }, 3000)
-      }
-    }, 1000/professionText.length)
-
-    setInterval(() => {
-      if (goForwards) return;
-      profession.innerText = "";
-      if (letNum > 0) {
+      
+      if (goForwards) {
+        if (letNum <= professionText.length) {
           profession.innerText = professionText.substring(0, letNum);
-          letNum--;
+          letNum++;
+        } else if (!isWaiting) {
+          isWaiting = true;
+          setTimeout(() => {
+            goForwards = false;
+            isWaiting = false;
+          }, 3000);
+        }
       } else {
-        if (!timeout)
+        if (letNum > 0) {
+          letNum--;
+          profession.innerText = professionText.substring(0, letNum);
+        } else {
           professionNum++;
-        timeout = true;
-        goForwards = true;
-        if (professionNum >= professions.length) {
-          professionNum = 0;
+          if (professionNum >= professions.length) {
+            professionNum = 0;
+          }
+          goForwards = true;
         }
       }
-    }, 1000/professionText.length)
+    }, 100);
   }
 
   function getSnapPoints(location?: { x: number, y: number }): HTMLCollectionOf<Element> | Element | null {
@@ -72,6 +65,7 @@ function App() {
 
   useEffect(() => {
     if (navbar.current) {
+      navbar.current.selectItem(0)
       navbar.current.snapPositionManager.refresh();
       setSnapPositions(navbar.current.snapPositionManager.getHorizontal());
     }
@@ -122,10 +116,21 @@ function App() {
             <h2 className="regular-header" id="projects-header">Projects</h2>
             <div className="projects-container">
               <ProjectCard url="https://portfolio-synkrotics-projects.vercel.app/" />
+              <ProjectCard url="https://openai.com/" />
+              <ProjectCard url="https://nextjs.org/" />
+
+              <ProjectCard url="https://tailwindcss.com/" />
+              <ProjectCard url="https://codesandbox.io/embed/new" />
+              <ProjectCard url="https://glitch.com/embed/#!/embed/remix" />
+
+              <ProjectCard url="https://threejs.org/examples/#webgl_animation_cloth" />
+              <ProjectCard url="https://phaser.io/examples/v3/view/scenes/scene-from-text" />
+              <ProjectCard url="https://observablehq.com/embed/@d3/bar-chart" />
             </div>
           </section>
         </main>
       </div>
+
       <div className="snap-position-container" id="snap-container">
         {snapPositions && snapPositions.map((pos, index) => {
           return <div key={index} className={`navbar-snappoint auto-resize ${pos.x}${pos.y}`} style={{ top: pos.y, left: pos.x }}></div>

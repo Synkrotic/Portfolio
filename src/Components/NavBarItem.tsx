@@ -3,7 +3,7 @@ import { Component } from "react";
 interface ItemProps {
   activeIcon: any,
   regularIcon: any,
-  
+  selectItem: () => void,
   title?: string,
   action?: () => void,
   extraClasses?: string
@@ -18,12 +18,26 @@ class NavBarItem extends Component<ItemProps> {
     if (!this.props.action) return;
 
     this.props.action();
-    this.swapIcon();
+    this.props.selectItem()
   }
 
-  swapIcon() {
-    this.setState({ shownIcon: this.state.shownIcon == this.props.activeIcon ? this.props.regularIcon : this.props.activeIcon });
+  public switchState() {
+    this.setState({ shownIcon:
+      this.state.shownIcon == this.props.activeIcon
+      ? this.props.regularIcon
+      : this.props.activeIcon
+    });
   }
+
+  public deselect() {
+    this.setState({ shownIcon: this.props.regularIcon })
+  }
+
+  public select() {
+    this.setState({ shownIcon: this.props.activeIcon })
+  }
+
+
 
   render() {
     return (

@@ -23,16 +23,23 @@ interface NavBarProps {
 class NavBar extends Component<NavBarProps> {
   // References
   private moveButton = createRef<HTMLButtonElement>();
-
+  private navbarItems = [
+    createRef<NavBarItem>(),  // Home item
+    createRef<NavBarItem>(),  // About me item
+    createRef<NavBarItem>(),  // Projects item
+    createRef<NavBarItem>(),  // Github item
+    createRef<NavBarItem>()   // Turn item
+  ]
   public container = createRef<HTMLElement>();
-
+  
   // Booleans
   private isVertical = false;
   private moveable = false;
   
   // Integers
   private snapPointSizeMultiplier = 0.9;
-
+  private selectedItem = 0
+  
   // Objects
   public snapPositionManager = new SnapPositionManager();
 
@@ -50,14 +57,30 @@ class NavBar extends Component<NavBarProps> {
 
       this.moveNavbarTo({ x: event.x, y: event.y})
     });
+
+    window.addEventListener('scroll', () => {
+      if (ScrollManager.isScrolling()) return
+
+      const aboutMeContainer = document.getElementsByClassName("about-me-container")[0] as HTMLElement;
+      const projectsContainer = document.getElementById("projects-wrapper") as HTMLElement
+      
+      if (aboutMeContainer && projectsContainer) {
+        const aboutY = aboutMeContainer.getBoundingClientRect().y;
+        const projectsY = projectsContainer.getBoundingClientRect().y;
+
+        if (projectsY < 0) this.selectItem(2)
+        else if (aboutY < 0) this.selectItem(1)
+        else this.selectItem(0)
+      }
+    });
   }
 
   private turnNavbar() {
     if (!this.container.current) return;
     this.container.current.classList.toggle('vertical');
     this.isVertical = !this.isVertical;
-    this.props.snapPositionsFunc(this.snapPositionManager.getVertical());
     this.snapPositionManager.refresh();
+    this.props.snapPositionsFunc(this.snapPositionManager.getVertical());
 
     const style = window.getComputedStyle(this.container.current);
     this.moveNavbarTo({ x: parseFloat(style.left), y: parseFloat(style.top) });
@@ -172,6 +195,17 @@ class NavBar extends Component<NavBarProps> {
     snapContainer?.classList.toggle('shown');
   }
 
+  
+  public selectItem(index: number) {
+    this.selectedItem = index
+
+    for (let i = 0; i < this.navbarItems.length; i++) {
+      let item = this.navbarItems[i].current
+      if (index == i) item?.select();
+      else item?.deselect()
+    }
+  }
+
   public resizeSnapPoints(multiplier: number = 1) {
     if (!this.container.current) return;
     const snapPoints = document.getElementsByClassName("navbar-snappoint");
@@ -203,45 +237,52 @@ class NavBar extends Component<NavBarProps> {
   }
 
 
-
   render() {
     return (
       <nav className='navbar-container bottom' ref={this.container}>
         <button className='navbar-item purple-hover' ref={this.moveButton}
-          onMouseDown={() => {
-            if (!this.moveable) this.activateMove();
-          }}
+          onMouseDown={() => { if (!this.moveable) this.activateMove(); }}
         >
           <Move />
         </button>
         <NavBarItem
+          ref={this.navbarItems[0]}
           activeIcon={AiFillHome}
           regularIcon={AiOutlineHome}
+          selectItem={ () => this.selectItem(0) }
           title='Home'
           action={ScrollManager.scrollHome}
         />
         <NavBarItem
+          ref={this.navbarItems[1]}
           activeIcon={FaUser}
           regularIcon={FaRegUser}
+          selectItem={ () => this.selectItem(1) }
           title='About Me'
           action={ScrollManager.scrollAbout}
           extraClasses='smaller'
         />
         <NavBarItem
+          ref={this.navbarItems[2]}
           activeIcon={AiFillProduct}
           regularIcon={AiOutlineProduct}
+          selectItem={ () => this.selectItem(2) }
           title='Projects'
           action={ScrollManager.scrollProjects}
         />
         <NavBarItem
+          ref={this.navbarItems[3]}
           activeIcon={AiFillGithub}
           regularIcon={AiOutlineGithub}
+          selectItem={ () => this.selectItem(3) }
           title='Github'
           action={() => { window.open('https://www.github.com/Synkrotic/'); }}
         />
         <NavBarItem
+          ref={this.navbarItems[4]}
           activeIcon={HiArrowTurnRightUp}
           regularIcon={HiArrowTurnRightDown}
+          selectItem={ () => this.selectItem(4) }
           title='Turn'
           action={() => { this.turnNavbar(); }}
         />

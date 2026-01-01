@@ -69,7 +69,7 @@
 }
 
 .about-me-container {
-  height: 120vh;
+  height: 140vh;
   width: 100vw;
   display: flex;
   flex-wrap: nowrap;
@@ -92,41 +92,42 @@
   margin-bottom: 20vh;
 }
 
+.about-left {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  height: 25vh;
+  width: 30vw;
+}
+
+.about-left::after {
+  content: "";
+  position: absolute;
+  height: 17vh;
+  width: 0.8vw;
+  background-color: aliceblue;
+  transform: translateX(35vw);
+}
+
 .about-me-text-header {
-  margin-left: 20vw;
   text-transform: capitalize;
-  width: 12vw;
-}
-.about-me-text-header::after {
-  content: "";
-  display: block;
-  position: absolute;
-  transform: translate(12vw, -60%);
-  width: 1vw;
-  height: 20vh;
-  background-color: snow;
+  justify-self: center;
 }
 
-.about-me-text-header::before {
-  content: "";
-  display: block;
-  position: absolute;
-  transform: translate(-12vw, -35%);
-  width: 20vh;
-  height: 20vh;
-  background-size: cover;
+.about-me-image {
+  aspect-ratio: 1 / 1;
+  height: 25vh;
 }
-
-#me-info::before { background-image: url("./assets/Images/me.webp"); }
-#experience-info::before { background-image: url("./assets/Images/experience.webp"); }
-#hobbies-info::before { background-image: url("./assets/Images/hobbies.webp"); }
 
 .about-me-text {
   width: 40vw;
-  margin-right: 2vw;
 }
 
+
 #projects-wrapper {
+  min-height: 101vh;
   height: max-content;
   width: 100vw;
   display: flex;
@@ -168,10 +169,6 @@
     max-width: 70vw;
   }
 
-  .about-me-header {
-    margin: 1vh 0px 10vh 0px;
-  }
-
   .about-me-container {
     height: 200vh;
   }
@@ -182,22 +179,29 @@
   }
 
   .about-me-text-header {
-    margin-left: 0vw;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    margin-bottom: 5vh;
   }
-  .about-me-text-header::after {
-    transform: translate(0, 4vh);
-    width: 80vw;
-    height: 1vh;
+
+  .about-me-image {
+    height: 20vh;
   }
-  .about-me-text-header::before {
-    transform: translate(0, -8.5vh);
-    width: 15vh;
-    height: 15vh;
+
+  .about-left {
+    width: 100vw;
+    justify-content: center;
+    padding-bottom: 5vh;
+  }
+
+  .about-left::after {
+    content: "";
+    position: absolute;
+    height: 0.8vh;
+    width: 65vw;
+    background-color: aliceblue;
+    transform: translateY(12vh);
   }
 
   .about-me-text {
