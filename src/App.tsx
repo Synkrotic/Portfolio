@@ -6,8 +6,11 @@ import NavBar from "./Components/NavBar";
 
 function App() {
   const professions = [
-    "Frontend web-developer",
-    "Android developer",
+    "Software",
+    "Frontend",
+    "Android",
+    "Kotlin",
+    "Java"
   ]
 
   const navbar = useRef<NavBar>(null);
@@ -77,8 +80,11 @@ function App() {
       <div className="app">
         <header className="app-header">
           <div className="headertext-container">
-            <h1 className="big-header">Jannes Borger</h1>
-            <h2 className="regular-header" id="header-profession"></h2>
+            <h1 className="big-header header">Jannes Borger</h1>
+            <div className="row-center">
+              <h2 className="regular-header header" id="header-profession"></h2>
+              <h2 className="regular-header header">Developer</h2>
+            </div>
           </div>
         </header>
         <main>

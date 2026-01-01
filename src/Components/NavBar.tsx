@@ -80,7 +80,10 @@ class NavBar extends Component<NavBarProps> {
     this.container.current.classList.toggle('vertical');
     this.isVertical = !this.isVertical;
     this.snapPositionManager.refresh();
-    this.props.snapPositionsFunc(this.snapPositionManager.getVertical());
+    
+    var locations = this.snapPositionManager.getVertical()
+    if (!this.isVertical) locations = this.snapPositionManager.getHorizontal()
+    this.props.snapPositionsFunc(locations);
 
     const style = window.getComputedStyle(this.container.current);
     this.moveNavbarTo({ x: parseFloat(style.left), y: parseFloat(style.top) });

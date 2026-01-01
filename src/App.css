@@ -30,6 +30,14 @@
   align-items: center;
 }
 
+#header-profession {
+  margin-right: 1.5vw;
+}
+
+.header {
+  
+}
+
 .headertext-container {
   height: 100vh;
   width: 100vw;
@@ -38,6 +46,11 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  background: linear-gradient(20deg, rgb(122, 122, 249) 30%, #ffffff 50%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .big-header {
@@ -152,6 +165,14 @@
 }
 .projects-container:has(.project-container.active) {
   padding: 0px;
+}
+
+.row-center {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 
 
