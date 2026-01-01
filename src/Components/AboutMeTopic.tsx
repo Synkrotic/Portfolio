@@ -11,7 +11,7 @@ const AboutMeTopic = ({ topic, children }: AboutMeTopicProps) => {
       <div className="about-left">
         <img
           className="about-me-image"
-          src={`/src/assets/Images/${topic}.webp`}
+          src={`../assets/Images/${topic}.webp`}
           alt={`${topic} image`}
         />
         <h3 className="about-me-text-header small-header" id={`${topic}-info`}>{topic}</h3>
