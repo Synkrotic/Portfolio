@@ -38,7 +38,6 @@ class NavBar extends Component<NavBarProps> {
   
   // Integers
   private snapPointSizeMultiplier = 0.9;
-  private selectedItem = 0
   
   // Objects
   public snapPositionManager = new SnapPositionManager();
@@ -200,8 +199,6 @@ class NavBar extends Component<NavBarProps> {
 
   
   public selectItem(index: number) {
-    this.selectedItem = index
-
     for (let i = 0; i < this.navbarItems.length; i++) {
       let item = this.navbarItems[i].current
       if (index == i) item?.select();

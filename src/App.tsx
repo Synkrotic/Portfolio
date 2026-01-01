@@ -51,6 +51,8 @@ function App() {
         }
       }
     }, 100);
+
+    interval.toString
   }
 
   function getSnapPoints(location?: { x: number, y: number }): HTMLCollectionOf<Element> | Element | null {
