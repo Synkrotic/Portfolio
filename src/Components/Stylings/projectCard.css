@@ -2,7 +2,6 @@
   height: 25vh;
   width: 25vw;
   border-radius: 1.25rem;
-  z-index: 3;
   margin: 3.125vw;
   overflow: hidden;
 }
@@ -14,10 +13,15 @@
 .project-container:not(:hover) { transition: 0.5s; }
 
 .project-container.active {
+  border-radius: 0px;
+  transform: scale(1);
+  transition: 1.5s;
   height: 100vh;
   width: 100vw;
-  transition: 1.5s;
+  margin: 0px;
 }
+.project-container.active:hover { z-index: 3; }
+
 .project-container.active .project-iframe {
   transform: scale(1);
   transition: 1.5s;

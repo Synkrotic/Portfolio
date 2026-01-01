@@ -1,280 +1,295 @@
 import {
   AiOutlineHome, AiFillHome,
   AiOutlineProduct, AiFillProduct,
-  AiOutlineTool, AiTwotoneTool,
   AiFillGithub, AiOutlineGithub,
 } from 'react-icons/ai'
 import { Move } from 'react-feather'
 import { FaUser, FaRegUser } from 'react-icons/fa6'
+import { HiArrowTurnRightDown, HiArrowTurnRightUp } from 'react-icons/hi2'
 
-import navbarSettingsFunction from '../Logic/ButtonFunctions/navbarSettings'
-import scrollManager from '../Logic/ButtonFunctions/scrollManager'
-
-import './Stylings/navbar.css'
+import { Component, createRef } from 'react'
 import NavBarItem from './NavBarItem'
-import React from 'react'
+import './Stylings/navbar.css'
+
+import ScrollManager from '../Logic/ButtonFunctions/scrollManager'
+import SnapPositionManager from '../Logic/snapPositionManager'
 
 interface NavBarProps {
   startPos: number,
+  snapPositionsFunc: (snapPositions: { x: number, y: number }[]) => void,
+  getSnapPoints: (location: { x: number, y: number }) => HTMLCollectionOf<Element> | Element | null
 }
 
-class NavBar extends React.Component<NavBarProps> {
-  navItemValues: Array<any>;
-  navItems: Array<any>;
-  moveable: boolean = false;
-  NavElements: Array<HTMLElement>;
-
-  navbar: HTMLElement | null = null;
-  positions: Array<{ x: number, y: number }> = [{ x: 0, y: 0 }];
-  startPos: number;
-
-  isPhone: boolean = window.innerWidth <= 768;
+class NavBar extends Component<NavBarProps> {
+  // References
+  private moveButton = createRef<HTMLButtonElement>();
+  private navbarItems = [
+    createRef<NavBarItem>(),  // Home item
+    createRef<NavBarItem>(),  // About me item
+    createRef<NavBarItem>(),  // Projects item
+    createRef<NavBarItem>(),  // Github item
+    createRef<NavBarItem>()   // Turn item
+  ]
+  public container = createRef<HTMLElement>();
   
-  constructor(props: any) {
+  // Booleans
+  private isVertical = false;
+  private moveable = false;
+  
+  // Integers
+  private snapPointSizeMultiplier = 0.9;
+  private selectedItem = 0
+  
+  // Objects
+  public snapPositionManager = new SnapPositionManager();
+
+
+  constructor(props: NavBarProps) {
     super(props)
-    this.navItemValues = [
-      {
-        buttonFunction: () => { scrollManager.scrollHome(); this.stopMobileButtonHover(); },
-        deactivateRange: { top: 0, bottom: window.innerHeight},
-        IconFill: AiFillHome,
-        IconOutline: AiOutlineHome,
-        title: 'Home'
-      }, { 
-        buttonFunction: () => { scrollManager.scrollAbout(); this.stopMobileButtonHover(); },
-        deactivateRange: { top: window.innerHeight, bottom: window.innerHeight * 2.2 },
-        extraClass: "smaller",
-        IconFill: FaUser,
-        IconOutline: FaRegUser,
-        title: 'About Me'
-      }, { 
-        buttonFunction: () => { scrollManager.scrollProjects(); this.stopMobileButtonHover(); },
-        deactivateRange: { top: window.innerHeight * 2.2, bottom: window.innerHeight * 3.3 },
-        IconFill: AiFillProduct,
-        IconOutline: AiOutlineProduct,
-        title: 'Projects'
-      }, {
-        buttonFunction: () => { window.open('https://www.github.com/Synkrotic'); this.stopMobileButtonHover(); },
-        IconFill: AiFillGithub,
-        IconOutline: AiOutlineGithub,
-        title: 'Github'
-      }, {
-        buttonFunction: () => { navbarSettingsFunction(); this.stopMobileButtonHover(); },
-        IconFill: AiTwotoneTool,
-        IconOutline: AiOutlineTool,
-        title: 'Settings'
-      },
-    ]
-    this.navItems = this.navItemValues.map((item, index) => (
-      React.createElement(NavBarItem, { ...item, id: index, key: index })
-    ))
-    this.NavElements = Array.from(document.getElementsByClassName('navbar-item')) as HTMLElement[];
-    this.startPos = props.startPos;
   }
 
   componentDidMount() {
-    this.setPositions();
-    this.setContainerPosition(this.startPos);
+    window.addEventListener('mouseup', () => {
+      if (this.moveable) this.deactivateMove();
+    });
+    window.addEventListener('mousemove', (event) => {
+      if (!this.moveable) return;
 
-    window.addEventListener('resize', () => {
-      this.setPositions();
-      this.setContainerPosition(this.startPos);
+      this.moveNavbarTo({ x: event.x, y: event.y})
+    });
+
+    window.addEventListener('scroll', () => {
+      if (ScrollManager.isScrolling()) return
+
+      const aboutMeContainer = document.getElementsByClassName("about-me-container")[0] as HTMLElement;
+      const projectsContainer = document.getElementById("projects-wrapper") as HTMLElement
+      
+      if (aboutMeContainer && projectsContainer) {
+        const aboutY = aboutMeContainer.getBoundingClientRect().y;
+        const projectsY = projectsContainer.getBoundingClientRect().y;
+
+        if (projectsY < 0) this.selectItem(2)
+        else if (aboutY < 0) this.selectItem(1)
+        else this.selectItem(0)
+      }
     });
   }
 
-  setSnapPointSize() {
-    const navbar = document.getElementsByClassName('navbar-container')[0] as HTMLElement;
-    const snapPoints = document.getElementsByClassName('navbar-snappoint') as HTMLCollectionOf<HTMLElement>;
-    for (let snapPoint of snapPoints) {
-      snapPoint.style.width = `${navbar.clientWidth}px`;
-      snapPoint.style.height = `${navbar.clientHeight}px`;
-      snapPoint.style.display = 'block';
-    }
+  private turnNavbar() {
+    if (!this.container.current) return;
+    this.container.current.classList.toggle('vertical');
+    this.isVertical = !this.isVertical;
+    this.snapPositionManager.refresh();
+    
+    var locations = this.snapPositionManager.getVertical()
+    if (!this.isVertical) locations = this.snapPositionManager.getHorizontal()
+    this.props.snapPositionsFunc(locations);
+
+    const style = window.getComputedStyle(this.container.current);
+    this.moveNavbarTo({ x: parseFloat(style.left), y: parseFloat(style.top) });
+
+    this.adjustDirection();
   }
 
-  setSnapLocation() {
-    const snapPoints = document.getElementsByClassName('navbar-snappoint') as HTMLCollectionOf<HTMLElement>;
-    this.positions.map((position, index) => {
-      snapPoints[index].style.left = `${position.x}px`;
-      snapPoints[index].style.top = `${position.y}px`;
-    });
-  }
+  private adjustDirection() {
+    if (!this.container.current) return;
+    const middleY = parseFloat(window.getComputedStyle(this.container.current).top) + this.container.current.offsetHeight / 2;
 
-  moveNavBar(endlocation: { x: number, y: number }) {
-    if (!this.moveable) return;
-    
-    if (endlocation.x < 0) endlocation.x = 0;
-    if (endlocation.y < 0) endlocation.y = 0;
-    if (endlocation.x > window.innerWidth) endlocation.x = window.innerWidth;
-    if (endlocation.y > window.innerHeight) endlocation.y = window.innerHeight;
-
-    // Disable scrolling
-    const app = document.getElementsByClassName('app')[0] as HTMLElement;
-    app.classList.add('no-scroll');
-    document.body.classList.add('no-scroll');
-
-    this.setPositions();
-    this.setSnapPointSize();
-    this.setSnapLocation();
-    
-    const navbar = document.getElementsByClassName('navbar-container')[0] as HTMLElement;
-    const navbaritems = document.getElementsByClassName('navbar-item') as HTMLCollectionOf<HTMLElement>;
-    const moveButton = document.getElementsByClassName('purple-hover')[0] as HTMLElement;
-    moveButton.classList.add('rebecca'); 
-    
-    const navbarTopPadding = parseFloat(window.getComputedStyle(navbar).paddingTop);
-    const navbarLeftPadding = parseFloat(window.getComputedStyle(navbar).paddingLeft);
-    let navbarX = 0;
-    let navbarY = 0;
-
-    if (navbar.classList.contains('vertical')) {
-      navbarX = endlocation.x - navbar.clientWidth / 2;
-      navbarY = endlocation.y - navbaritems[0].clientHeight / 2 - navbarTopPadding;
+    if (this.isVertical) {
+      const middleX = parseFloat(window.getComputedStyle(this.container.current).left) + this.container.current.offsetWidth / 2;
+      if (middleX > window.innerWidth / 2) {
+        this.container.current.classList.add('left');
+      } else {
+        this.container.current.classList.remove('left');
+      }
     } else {
-      navbarX = (endlocation.x - navbaritems[0].clientWidth / 2) - navbarLeftPadding;
-      navbarY = endlocation.y - navbar.clientHeight / 2;
-    }
-
-    const snapDistance = 100;
-    for (let position of this.positions) {
-      if (Math.abs(navbarX - position.x) < snapDistance && Math.abs(navbarY - position.y) < snapDistance) {
-        navbarX = position.x;
-        navbarY = position.y;
-        break;
+      if (middleY > window.innerHeight / 2) {
+        this.container.current.classList.remove('bottom');
+      } else {
+        this.container.current.classList.add('bottom');
       }
     }
+  }
 
+  private moveNavbarTo(endlocation: { x: number, y: number }, center: boolean = true) {
+    if (!this.container.current) return;
 
-    if (navbarX < 0)
-      navbarX = 0;
-    if (navbarX + navbar.clientWidth > window.innerWidth)
-      navbarX = window.innerWidth - navbar.clientWidth;
+    this.checkSnapProximity({ x: endlocation.x, y: endlocation.y });
     
-    if (navbarY < 0)
-      navbarY = 0;
-    if (navbarY + navbar.clientHeight > window.innerHeight)
-      navbarY = window.innerHeight - navbar.clientHeight;
+    if (!center) {
+      this.container.current.style.left = `${endlocation.x}px`;
+      this.container.current.style.top = `${endlocation.y}px`;
+      return;
+    }
 
-    if (navbarX > (window.innerWidth / 2) - (navbar.clientWidth / 2) && navbar.classList.contains('vertical')) navbar.classList.add('left')
-    else navbar.classList.remove('left');
+    let adjustedX = 0;
+    let adjustedY = 0;
 
-    if (navbarY < (window.innerHeight / 2) - (navbar.clientHeight / 2) && !navbar.classList.contains('vertical')) navbar.classList.add('bottom')
-    else navbar.classList.remove('bottom');
+    if (!this.isVertical) {
+      const paddingLeft = parseFloat(window.getComputedStyle(this.container.current).paddingLeft);
+      adjustedX = endlocation.x - this.container.current.offsetHeight / 2 - paddingLeft;
+      adjustedY = endlocation.y - this.container.current.offsetHeight / 2;
+    } else {
+      const paddingTop = parseFloat(window.getComputedStyle(this.container.current).paddingTop);
+      adjustedX = endlocation.x - this.container.current.offsetWidth / 2;
+      adjustedY = endlocation.y - this.container.current.offsetWidth / 2 - paddingTop;
+    }
 
-    navbar.style.left = `${navbarX}px`;
-    navbar.style.top = `${navbarY}px`;
+    if (adjustedX < 0) adjustedX = 0;
+    if (adjustedY < 0) adjustedY = 0;
+    if (adjustedX > window.innerWidth - this.container.current.offsetWidth) adjustedX = window.innerWidth - this.container.current.offsetWidth;
+    if (adjustedY > window.innerHeight - this.container.current.offsetHeight) adjustedY = window.innerHeight - this.container.current.offsetHeight;
+
+    if (this.container.current.style.left === `${adjustedX}px` && this.container.current.style.top === `${adjustedY}px`) return;
+
+    this.container.current.style.left = `${adjustedX}px`;
+    this.container.current.style.top = `${adjustedY}px`;
   }
 
-  setPositions() {
-    this.navbar = document.getElementsByClassName('navbar-container')[0] as HTMLElement;
-    const isVertical = this.navbar.classList.contains('vertical');
-    if (this.isPhone) {
-      this.positions = [
-        {x: 0, y: 0},
-        {x: 0, y: window.innerHeight - this.navbar.clientHeight},
-      ]
-      if (isVertical) {
-        this.positions.push({x: 0, y: window.innerHeight / 2 - this.navbar.clientHeight / 2});
+  private checkSnapProximity(location: { x: number, y: number }) {
+    if (!this.container.current) return;
+    
+    let snapCoords = [];
+    if (this.isVertical)
+      snapCoords = this.snapPositionManager.getVertical();
+    else
+      snapCoords = this.snapPositionManager.getHorizontal();
+    if (!snapCoords) return;
 
-        this.positions.push({x: window.innerWidth - this.navbar.clientWidth, y: 0});
-        this.positions.push({x: window.innerWidth - this.navbar.clientWidth, y: window.innerHeight / 2 - this.navbar.clientHeight / 2});
-        this.positions.push({x: window.innerWidth - this.navbar.clientWidth, y: window.innerHeight - this.navbar.clientHeight / 2});
+    for (const snapCoord of snapCoords) {
+      const distance = Math.sqrt(
+        Math.pow(location.x - snapCoord.x, 2) +
+        Math.pow(location.y - snapCoord.y, 2)
+      );
+
+      const snapPoint = this.props.getSnapPoints(snapCoord);
+      if (!snapPoint) return
+      if (distance <= 100) {
+        if (snapPoint instanceof Element) {
+          snapPoint.classList.add('active');
+          (snapPoint as HTMLElement).style.scale = '1';
+          (snapPoint as HTMLElement).style.height = `${this.container.current.clientHeight}px`;
+          (snapPoint as HTMLElement).style.width = `${this.container.current.clientWidth}px`;
+          (snapPoint as HTMLElement).style.transform = 'translate(0px, 0px)';
+        }
+      } else {
+        if (snapPoint instanceof Element) {
+          snapPoint.classList.remove('active');
+          (snapPoint as HTMLElement).style.scale = this.snapPointSizeMultiplier.toString();
+          this.resizeSnapPoints(this.snapPointSizeMultiplier);
+          const adjustedX = this.container.current.clientWidth * (1 - this.snapPointSizeMultiplier) / 4;
+          const adjustedY = this.container.current.clientHeight * (1 - this.snapPointSizeMultiplier) / 4;
+          (snapPoint as HTMLElement).style.transform = `translate(${adjustedX}px, ${adjustedY}px)`;
+        }
       }
-      return
     }
-
-    this.positions = [];
-    this.positions.push({x: window.innerWidth * 1/30, y: window.innerHeight * 1/50});
-    if (!isVertical) this.positions.push({x: window.innerWidth / 2 - this.navbar.clientWidth / 2, y: window.innerHeight * 1/50});
-    this.positions.push({x: window.innerWidth - this.navbar.clientWidth - (window.innerWidth * 1/30), y: window.innerHeight * 1/50});
-
-
-    if (isVertical) {
-      this.positions.push({x: window.innerWidth * 1/30, y: window.innerHeight / 2 - this.navbar.clientHeight / 2});
-      this.positions.push({x: window.innerWidth - this.navbar.clientWidth - (window.innerWidth * 1/30), y: window.innerHeight / 2 - this.navbar.clientHeight / 2});
-    }
-
-    this.positions.push({x: window.innerWidth * 1/30, y: window.innerHeight - this.navbar.clientHeight - (window.innerHeight * 1/50)});
-    if (!isVertical) this.positions.push({x: window.innerWidth / 2 - this.navbar.clientWidth / 2, y: window.innerHeight - this.navbar.clientHeight - (window.innerHeight * 1/50)});
-    this.positions.push({x: window.innerWidth - this.navbar.clientWidth - (window.innerWidth * 1/30), y: window.innerHeight - this.navbar.clientHeight - (window.innerHeight
-      * 1/50)});
   }
 
-  setContainerPosition(positionIndex: number) {
-    if (this.navbar === null) return;
-    this.navbar.style.left = `${this.positions[positionIndex].x}px`;
-    this.navbar.style.top = `${this.positions[positionIndex].y}px`;
-    this.forceUpdate();
+  private snapToPoint() {
+    const snapPoint = document.getElementsByClassName('navbar-snappoint active')[0];
+    if (!snapPoint) return;
+
+    const snapStyle = window.getComputedStyle(snapPoint);
+    this.moveNavbarTo({ x: parseFloat(snapStyle.left), y: parseFloat(snapStyle.top) }, false);
   }
 
-  stopMove() {
-    if (!this.moveable) return;
+  private toggleSnapPoints() {
+    const snapContainer = document.getElementById('snap-container');
+    snapContainer?.classList.toggle('shown');
+  }
+
+  
+  public selectItem(index: number) {
+    this.selectedItem = index
+
+    for (let i = 0; i < this.navbarItems.length; i++) {
+      let item = this.navbarItems[i].current
+      if (index == i) item?.select();
+      else item?.deselect()
+    }
+  }
+
+  public resizeSnapPoints(multiplier: number = 1) {
+    if (!this.container.current) return;
+    const snapPoints = document.getElementsByClassName("navbar-snappoint");
+    for(let i = 0; i < snapPoints.length; i++) {
+      const snapPoint = snapPoints[i] as HTMLElement;
+      if (!snapPoint.classList.contains('auto-resize')) continue;
+
+      snapPoint.style.height = `${this.container.current.clientHeight * multiplier}px`;
+      snapPoint.style.width = `${this.container.current.clientWidth * multiplier}px`;
+    }
+  }
+
+  public activateMove() {
+    this.moveable = true;
+    this.moveButton.current?.classList.add('rebecca');
+    
+    this.checkSnapProximity(this.container.current ? { x: parseFloat(this.container.current.style.left), y: parseFloat(this.container.current.style.top) } : { x: 0, y: 0 });
+    this.resizeSnapPoints(this.snapPointSizeMultiplier);
+    this.toggleSnapPoints();
+  }
+
+  public deactivateMove() {
     this.moveable = false;
-    const moveButton = document.getElementsByClassName('movebutton')[0] as HTMLElement;
-    if (moveButton.classList.contains('rebecca')) moveButton.classList.remove('rebecca');
+    this.moveButton.current?.classList.remove('rebecca');
 
-    const snapPoints = document.getElementsByClassName('navbar-snappoint') as HTMLCollectionOf<HTMLElement>;
-    for (let snapPoint of snapPoints) { snapPoint.style.display = 'none'; }
-
-    // Enable Scrolling
-    const app = document.getElementsByClassName('app')[0] as HTMLElement;
-    app.classList.remove('no-scroll');
-    document.body.classList.remove('no-scroll');
+    this.snapToPoint();
+    this.toggleSnapPoints();
+    this.adjustDirection();
   }
 
-  stopMobileButtonHover() {
-    const buttons = document.getElementsByClassName('navbar-item') as HTMLCollectionOf<HTMLElement>;
-    for (let button of buttons) {
-      button.classList.add('nohover');
-      setTimeout(() => {
-        button.classList.remove('nohover');
-      }, 100);
-    }
-  }
 
   render() {
     return (
-      <>
-        <div className='navbar-wrapper'
-          onMouseUp={() => { this.stopMove(); }}
-          onTouchEnd={() => { this.stopMove(); }}
-          onTouchCancel={() => { this.stopMove(); }}
-
-          onMouseMove={(e) => {
-            let mouse = e as React.MouseEvent;
-            this.moveNavBar({ x: mouse.clientX, y: mouse.clientY });
-          }}
-          onTouchMove={(e) => {
-            let touch = e.touches[0];
-            this.moveNavBar({ x: touch.clientX, y: touch.clientY });
-          }}
+      <nav className='navbar-container bottom' ref={this.container}>
+        <button className='navbar-item purple-hover' ref={this.moveButton}
+          onMouseDown={() => { if (!this.moveable) this.activateMove(); }}
         >
-          {
-            this.positions.map((position, i) => (
-              <div
-                key={i}
-                className='navbar-snappoint'
-                style={{
-                  left: `${position.x}px`,
-                  top: `${position.y}px`,
-                  display: 'none',
-                }}
-              />
-            ))
-          } 
-          <nav className='navbar-container'>
-            <button
-              className={`navbar-item nohover purple-hover movebutton`}
-
-              onMouseDown={() => { this.moveable = true; }}
-              onTouchStart={() => { this.moveable = true; }}
-            >
-              <Move />
-            </button>
-            {this.navItems}
-            <span className='navbar-stretch'></span>
-          </nav>
-        </div>
-      </>
+          <Move />
+        </button>
+        <NavBarItem
+          ref={this.navbarItems[0]}
+          activeIcon={AiFillHome}
+          regularIcon={AiOutlineHome}
+          selectItem={ () => this.selectItem(0) }
+          title='Home'
+          action={ScrollManager.scrollHome}
+        />
+        <NavBarItem
+          ref={this.navbarItems[1]}
+          activeIcon={FaUser}
+          regularIcon={FaRegUser}
+          selectItem={ () => this.selectItem(1) }
+          title='About Me'
+          action={ScrollManager.scrollAbout}
+          extraClasses='smaller'
+        />
+        <NavBarItem
+          ref={this.navbarItems[2]}
+          activeIcon={AiFillProduct}
+          regularIcon={AiOutlineProduct}
+          selectItem={ () => this.selectItem(2) }
+          title='Projects'
+          action={ScrollManager.scrollProjects}
+        />
+        <NavBarItem
+          ref={this.navbarItems[3]}
+          activeIcon={AiFillGithub}
+          regularIcon={AiOutlineGithub}
+          selectItem={ () => this.selectItem(3) }
+          title='Github'
+          action={() => { window.open('https://www.github.com/Synkrotic/'); }}
+        />
+        <NavBarItem
+          ref={this.navbarItems[4]}
+          activeIcon={HiArrowTurnRightUp}
+          regularIcon={HiArrowTurnRightDown}
+          selectItem={ () => this.selectItem(4) }
+          title='Turn'
+          action={() => { this.turnNavbar(); }}
+        />
+      </nav>
     )
   }
 }
