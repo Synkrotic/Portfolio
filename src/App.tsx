@@ -14,6 +14,8 @@ function App() {
   ]
 
   const navbar = useRef<NavBar>(null);
+  const contactSubject = useRef<HTMLInputElement>(null);
+  const contactMessage = useRef<HTMLTextAreaElement>(null);
   const [snapPositions, setSnapPositions] = useState<{ x: number, y: number }[]>();
 
   function changeProfession() {
@@ -68,6 +70,11 @@ function App() {
     return snapPoints;
   }
 
+  function getSnapPointByIndex(index: number): Element {
+    let snapPoints = document.getElementsByClassName("navbar-snappoint");
+    return snapPoints[index];
+  }
+
   useEffect(() => {
     if (navbar.current) {
       navbar.current.selectItem(0)
@@ -76,6 +83,7 @@ function App() {
     }
     changeProfession();
   }, [])
+
 
   return (
     <>
@@ -118,8 +126,8 @@ function App() {
               I am passionate about creating clean and maintainable code and I love to work in a team.
               I am always looking for new ways to improve my skills and I am not afraid to take on new challenges.
             </AboutMeTopic>
-
           </article>
+
           <section id="projects-wrapper">
             <h2 className="regular-header" id="projects-header">Projects</h2>
             <div className="projects-container">
@@ -156,12 +164,40 @@ function App() {
               </ProjectCard>
               <ProjectCard
                 url="https://turbowarp.org/60917032/embed"
-                title="TurboWarp"
+                title="Appel"
               >
                 A Scratch game about an apple, exported to JavaScript
               </ProjectCard>
             </div>
           </section>
+          
+          <section id="contact-wrapper" className="section">
+            <div className="contact-container">
+              <h2 className="regular-header" id="contact-header">Get In Touch</h2>
+              <div className="contact-form-wrapper">
+                <img src="/assets/Images/contact.png" id="contact-image" />
+                <div id="contact-form">
+                  <input ref={contactSubject} type="text" className="form-input" placeholder="Subject" required />
+                  <textarea ref={contactMessage} className="form-textfield" placeholder="Message" rows={5} required />
+                  <button
+                    type="submit"
+                    className="contact-submit-button"
+                    onClick={() => {
+                      const email = "jannesborger@gmail.com";
+                      const subject = contactSubject.current?.value.trim() || "";
+                      const message = contactMessage.current?.value.trim() || "";
+
+                      console.log(email, subject, message);
+                      window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`
+                    }}
+                  >
+                    Send Message
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
         </main>
       </div>
 
@@ -171,7 +207,14 @@ function App() {
         }
       )}
       </div>
-      <NavBar startPos={0} ref={navbar} snapPositionsFunc={setSnapPositions} getSnapPoints={getSnapPoints} />
+
+      <NavBar
+        ref={navbar}
+        startPos={0}
+        snapPositionsFunc={setSnapPositions}
+        getSnapPoints={getSnapPoints}
+        getSnapPointByIndex={getSnapPointByIndex}
+      />
     </>
   )
 }

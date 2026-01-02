@@ -9,6 +9,7 @@
 .project-container:hover {
   transform: scale(1.15);
   transition: 0.5s;
+  box-shadow: 0 0 20px var(--accent);
 }
 
 .project-container:not(:hover) { transition: 0.5s; }
@@ -32,7 +33,13 @@
 
 .project-container:hover .project-card {
   background-color: rgba(0, 0, 0, 0.6);
-  color: rgba(255, 250, 250, 255);
+  color: snow;
+}
+.project-card h3 {
+  transition: color 0.3s;
+}
+.project-container:hover .project-card h3 {
+  color: rgba(122, 122, 249, 1);
 }
 
 
