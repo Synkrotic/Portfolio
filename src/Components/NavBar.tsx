@@ -2,6 +2,8 @@ import {
   AiOutlineHome, AiFillHome,
   AiOutlineProduct, AiFillProduct,
   AiFillGithub, AiOutlineGithub,
+  AiFillPhone,
+  AiOutlinePhone,
 } from 'react-icons/ai'
 import { Move } from 'react-feather'
 import { FaUser, FaRegUser } from 'react-icons/fa6'
@@ -17,7 +19,8 @@ import SnapPositionManager from '../Logic/snapPositionManager'
 interface NavBarProps {
   startPos: number,
   snapPositionsFunc: (snapPositions: { x: number, y: number }[]) => void,
-  getSnapPoints: (location: { x: number, y: number }) => HTMLCollectionOf<Element> | Element | null
+  getSnapPoints: (location: { x: number, y: number }) => HTMLCollectionOf<Element> | Element | null,
+  getSnapPointByIndex: (index: number) => Element
 }
 
 class NavBar extends Component<NavBarProps> {
@@ -27,6 +30,7 @@ class NavBar extends Component<NavBarProps> {
     createRef<NavBarItem>(),  // Home item
     createRef<NavBarItem>(),  // About me item
     createRef<NavBarItem>(),  // Projects item
+    createRef<NavBarItem>(),  // Contact item
     createRef<NavBarItem>(),  // Github item
     createRef<NavBarItem>()   // Turn item
   ]
@@ -45,6 +49,8 @@ class NavBar extends Component<NavBarProps> {
 
   constructor(props: NavBarProps) {
     super(props)
+
+    this.snapToPointByIndex(1);
   }
 
   componentDidMount() {
@@ -62,16 +68,21 @@ class NavBar extends Component<NavBarProps> {
 
       const aboutMeContainer = document.getElementsByClassName("about-me-container")[0] as HTMLElement;
       const projectsContainer = document.getElementById("projects-wrapper") as HTMLElement
+      const contactContainer = document.getElementById("contact-wrapper") as HTMLElement
       
-      if (aboutMeContainer && projectsContainer) {
+      if (aboutMeContainer && projectsContainer && contactContainer) {
         const aboutY = aboutMeContainer.getBoundingClientRect().y;
         const projectsY = projectsContainer.getBoundingClientRect().y;
+        const contactY = contactContainer.getBoundingClientRect().y;
 
-        if (projectsY < 0) this.selectItem(2)
+        if (contactY < 0) this.selectItem(3)
+        else if (projectsY < 0) this.selectItem(2)
         else if (aboutY < 0) this.selectItem(1)
         else this.selectItem(0)
       }
     });
+
+    this.snapToPointByIndex(1);
   }
 
   private turnNavbar() {
@@ -182,6 +193,14 @@ class NavBar extends Component<NavBarProps> {
         }
       }
     }
+  } 
+
+  public snapToPointByIndex(index: number) {
+    const snapPoint = this.props.getSnapPointByIndex(index);
+    if (!snapPoint) return;
+
+    const snapStyle = window.getComputedStyle(snapPoint);
+    this.moveNavbarTo({ x: parseFloat(snapStyle.left), y: parseFloat(snapStyle.top) }, false);
   }
 
   private snapToPoint() {
@@ -272,17 +291,25 @@ class NavBar extends Component<NavBarProps> {
         />
         <NavBarItem
           ref={this.navbarItems[3]}
+          activeIcon={AiFillPhone}
+          regularIcon={AiOutlinePhone}
+          selectItem={ () => this.selectItem(3) }
+          title='Contact Me'
+          action={ScrollManager.scrollContact}
+        />
+        <NavBarItem
+          ref={this.navbarItems[4]}
           activeIcon={AiFillGithub}
           regularIcon={AiOutlineGithub}
-          selectItem={ () => this.selectItem(3) }
+          selectItem={ () => this.selectItem(4) }
           title='Github'
           action={() => { window.open('https://www.github.com/Synkrotic/'); }}
         />
         <NavBarItem
-          ref={this.navbarItems[4]}
+          ref={this.navbarItems[5]}
           activeIcon={HiArrowTurnRightUp}
           regularIcon={HiArrowTurnRightDown}
-          selectItem={ () => this.selectItem(4) }
+          selectItem={ () => this.selectItem(5) }
           title='Turn'
           action={() => { this.turnNavbar(); }}
         />

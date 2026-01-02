@@ -18,14 +18,6 @@ class ScrollManager {
     window.addEventListener("scroll", onScroll);
   }
 
-  static scrollProjects() {
-    ScrollManager.startScroll(() =>
-      document.getElementById("projects-header")?.scrollIntoView({
-        behavior: "smooth",
-      })
-    );
-  }
-
   static scrollHome() {
     ScrollManager.startScroll(() =>
       window.scrollTo({ top: 0, behavior: "smooth" })
@@ -35,6 +27,22 @@ class ScrollManager {
   static scrollAbout() {
     ScrollManager.startScroll(() =>
       document.getElementById("about-me-header")?.scrollIntoView({
+        behavior: "smooth",
+      })
+    );
+  }
+
+  static scrollProjects() {
+    ScrollManager.startScroll(() =>
+      document.getElementById("projects-header")?.scrollIntoView({
+        behavior: "smooth",
+      })
+    );
+  }
+
+  static scrollContact() {
+    ScrollManager.startScroll(() =>
+      document.getElementById("contact-header")?.scrollIntoView({
         behavior: "smooth",
       })
     );
