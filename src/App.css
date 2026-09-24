@@ -140,6 +140,7 @@
 
 
 #projects-wrapper {
+  margin-top: 5vh;
   min-height: 101vh;
   height: max-content;
   width: 100vw;
@@ -176,6 +177,7 @@
 }
 
 #contact-wrapper {
+  margin-top: 5vh;
   height: 101vh;
 }
 
