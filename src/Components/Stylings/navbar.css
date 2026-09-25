@@ -65,7 +65,7 @@
 }
 
 .navbar-container:has(:hover) {
-  transform: translateX(calc(-50% -2vh));
+  transform: translateX(calc(-50% - 2vh));
   transition: 0.3s;
 }
 
