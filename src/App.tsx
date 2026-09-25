@@ -10,10 +10,10 @@ function App() {
 	return (
 		<BrowserRouter>
 			<Routes>
-				<Route path="*" element={<h1>404</h1>} />
 				<Route path="/" element={<Homepage />} />
 				<Route path="/voorraadbeheer" element={<Homepage />} />
 				<Route path="/versions/repository/:programName" element={<Versionpage />} />
+				<Route path="*" element={<h1>404</h1>} />
 			</Routes>
 		</BrowserRouter>
 	)
