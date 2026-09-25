@@ -12,7 +12,7 @@ app.use(express.json());
 app.get("/api/newest/:program", async (req, res) => {
   const { program } = req.params;
   try {
-    const { blobs } = await list({ prefix: `${program}/` });
+    const { blobs } = await list();
     if (blobs.length === 0) {
       return res.status(404).json({ error: "program not found" });
     }
