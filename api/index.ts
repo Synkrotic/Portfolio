@@ -1,11 +1,7 @@
 // api/index.ts
 import express from "express";
 import cors from "cors";
-import { fileURLToPath } from "node:url";
-import path from "node:path";
-import { readdir } from "node:fs/promises";
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+import { list } from "@vercel/blob";
 
 const app = express();
 
@@ -13,20 +9,19 @@ const allowedOrigins = ["*"];
 app.use(cors({ origin: allowedOrigins }));
 app.use(express.json());
 
-async function getProgramFiles(program: string): Promise<string[]> {
-  const files = await readdir(path.join(__dirname, `../public/repositories/${program}`));
-  return files;
-}
-
-app.use("/api/repositories", express.static(path.join(__dirname, "../public/repositories")));
-
 app.get("/api/newest/:program", async (req, res) => {
   const { program } = req.params;
   try {
-    const files = await getProgramFiles(program);
-    res.json(files.at(-1));
-  } catch {
-    res.status(404).json({ error: "program not found" });
+    const { blobs } = await list({ prefix: `${program}/` });
+    if (blobs.length === 0) {
+      return res.status(404).json({ error: "program not found" });
+    }
+    const newest = blobs.sort(
+      (a, b) => new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime()
+    )[0];
+    res.json({ filename: newest.pathname.split("/").pop(), url: newest.url });
+  } catch (err) {
+    res.status(500).json({ error: "failed to list files" });
   }
 });
 
