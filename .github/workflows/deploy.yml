@@ -19,6 +19,6 @@ jobs:
             set -e
             cd ${{ secrets.VPS_PROJECT_PATH }}
             git pull origin production
-            npm install
-            npm run build
+            pnpm install
+            pnpm build
             cp -r dist/* ${{ secrets.VPS_SERVER_PATH }}
