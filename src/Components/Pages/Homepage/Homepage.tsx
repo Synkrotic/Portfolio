@@ -104,17 +104,23 @@ function Homepage() {
 
 						<AboutMeTopic topic="me" >
 							Hello! My name is Jannes. I am {getMyAge()} years old and I've been programming for {getMyAge() - 13} of those.
-							I come from a small village in the Northern part of the Netherlands. Where I grew up on the farm of my family.
-							
+							I come from a small village in the Northern part of the Netherlands, where I grew up on a farm.<br />
+                            Around my 12th birthday I sparked an interest in computers and building one.
+                            After a year of saving up I built my first computer on my 13th birthday. 
+                            Having built this computer made me look for more of a challenge which ended up being programming.
 						</AboutMeTopic>
 
 						<AboutMeTopic topic="experience" >
-							I have been working as a software engineer for over 5 years.
-							I have experience with a wide range of technologies and programming languages.
-							I have worked on a variety of projects, from small websites to large web applications.
-							I am always looking for new challenges and opportunities to learn new things.
-							I am passionate about creating clean and maintainable code and I love to work in a team.
-							I am always looking for new ways to improve my skills and I am not afraid to take on new challenges.
+							As I stated in the topic above, I've been programming for {getMyAge() - 13} years.
+                            The first language I learnt was C# since I wanted to try game development.
+                            Though I did not see a future in game design for myself.
+                            My next programming interest was in web development since at the time I got classes in this in middle school.
+                            When I started web development I preferred backend development, and got experience in mostly PHP.
+                            Though when I got to University I made a couple projects with a classmate.
+                            This classmate exceeded my knowledge in backend, so naturally shifted more towards frontend development.
+                            
+
+                            Talk about years development in webdev, and multiple frameworks. Also talk about shift to appdev and jvmdev
 						</AboutMeTopic>
 
 						<AboutMeTopic topic="hobbies" >
