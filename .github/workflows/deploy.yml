@@ -7,16 +7,28 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      VPS_HOST: ${{ secrets.VPS_HOST || vars.VPS_HOST }}
+      VPS_USER: ${{ secrets.VPS_USER || vars.VPS_USER }}
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY || vars.SSH_PRIVATE_KEY }}
+      VPS_PATH: ${{ secrets.VPS_PATH || vars.VPS_PATH }}
+      VPS_SERVER_PATH: ${{ secrets.VPS_SERVER_PATH || vars.VPS_SERVER_PATH }}
     steps:
+      - name: Skip deploy if configuration is missing
+        if: ${{ env.VPS_HOST == '' || env.VPS_USER == '' || env.SSH_PRIVATE_KEY == '' || env.VPS_PATH == '' || env.VPS_SERVER_PATH == '' }}
+        run: |
+          echo "::warning::Skipping deploy because one or more required deployment values are missing (VPS_HOST, VPS_USER, SSH_PRIVATE_KEY, VPS_PATH, VPS_SERVER_PATH)."
+
       - name: Deploy over SSH
+        if: ${{ env.VPS_HOST != '' && env.VPS_USER != '' && env.SSH_PRIVATE_KEY != '' && env.VPS_PATH != '' && env.VPS_SERVER_PATH != '' }}
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          host: ${{ env.VPS_HOST }}
+          username: ${{ env.VPS_USER }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
           script: |
-            cd ${{ secrets.VPS_PATH }}
+            cd ${{ env.VPS_PATH }}
             git pull origin production
             npm install
             npm run build
-            cp -r dist/* ${{ secrets.VPS_SERVER_PATH }}
+            cp -r dist/* ${{ env.VPS_SERVER_PATH }}
