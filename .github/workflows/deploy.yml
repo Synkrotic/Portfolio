@@ -17,7 +17,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             set -e
-            cd ${{ secrets.VPS_PATH }}
+            cd ${{ secrets.VPS_PROJECT_PATH }}
             git pull origin production
             npm install
             npm run build
