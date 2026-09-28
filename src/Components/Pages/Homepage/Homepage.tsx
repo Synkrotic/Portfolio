@@ -123,14 +123,9 @@ function Homepage() {
                             Talk about years development in webdev, and multiple frameworks. Also talk about shift to appdev and jvmdev
 						</AboutMeTopic>
 
-						<AboutMeTopic topic="hobbies" >
-							I am a software engineer who loves to create web applications.
-							I am currently working as a frontend developer at a company in the Netherlands.
-							My main focus is on creating user-friendly and accessible web applications.
-							I am always looking for new challenges and opportunities to learn new things.
-							I am passionate about creating clean and maintainable code and I love to work in a team.
-							I am always looking for new ways to improve my skills and I am not afraid to take on new challenges.
-						</AboutMeTopic>
+						<AboutMeTopic topic="hobbies">
+                            Write something about my hobbies here...
+                        </AboutMeTopic>
 					</article>
 
 					<section id="projects-wrapper">
@@ -188,11 +183,10 @@ function Homepage() {
 										type="submit"
 										className="contact-submit-button"
 										onClick={() => {
-											const email = "jannes@borgerbytes.dev";
+											const email = "website@borgerbytes.dev";
 											const subject = contactSubject.current?.value.trim() || "";
 											const message = contactMessage.current?.value.trim() || "";
 
-											console.log(email, subject, message);
 											window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`
 										}}
 									>
